@@ -37,12 +37,9 @@ Pronto. Abra o Claude Code e use `/payment-mix-analyzer` para começar.
 
 ## Credenciais
 
-**Store ID:** aparece na URL do admin da sua loja:
-```
-https://www.nuvemshop.com.br/admin/[STORE_ID]/...
-```
+Você vai precisar de um **Store ID** e um **Access Token**. Leva cerca de 5 minutos na primeira vez.
 
-**Access Token:** crie um app em [partners.nuvemshop.com.br](https://partners.nuvemshop.com.br), instale na sua loja e copie o `access_token` gerado.
+→ **[Guia completo passo a passo](CREDENTIALS.md)**
 
 O token **não expira** — configure uma vez e esqueça.
 

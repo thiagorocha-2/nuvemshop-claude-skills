@@ -18,6 +18,9 @@ echo ""
 echo "  Token     → Crie um app em: https://partners.nuvemshop.com.br"
 echo "              Após instalar o app na sua loja, copie o access_token"
 echo ""
+echo "  Precisa de ajuda? Leia o guia completo:"
+echo "  https://github.com/thiagorocha-2/nuvemshop-claude-skills/blob/main/CREDENTIALS.md"
+echo ""
 
 # Solicitar credenciais
 read -r -p "Cole seu Store ID: " store_id
