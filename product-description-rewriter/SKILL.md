@@ -43,23 +43,23 @@ Se o merchant não souber o category_id:
 
 ```bash
 python3 << 'EOF'
-import urllib.request, json, os
+import urllib.request, urllib.error, json, os
 
 base = f"https://api.tiendanube.com/2025-03/{os.environ['NUVEMSHOP_STORE_ID']}"
 token = os.environ['NUVEMSHOP_TOKEN']
 headers = {'Authentication': f"bearer {token}", 'User-Agent': 'ClaudeSkill (contato@loja.com)'}
 
-req = urllib.request.Request(f"{base}/categories?fields=id,name,product_count&per_page=250", headers=headers)
+req = urllib.request.Request(f"{base}/categories?fields=id,name&per_page=250", headers=headers)
 with urllib.request.urlopen(req) as r:
     cats = json.loads(r.read())
 
-print(f"\n{'ID':>8}  {'Categoria':<40} {'Produtos':>9}")
+print(f"\n{'ID':>8}  {'Categoria':<50}")
 print('-' * 62)
 for c in cats:
     name = c.get('name', {})
     if isinstance(name, dict):
         name = name.get('pt', name.get('es', str(c['id'])))
-    print(f"{c['id']:>8}  {name:<40} {c.get('product_count', '?'):>9}")
+    print(f"{c['id']:>8}  {name:<50}")
 EOF
 ```
 
@@ -71,7 +71,7 @@ EOF
 CATEGORY_ID=123  # substituir pelo ID informado
 
 python3 << EOF
-import urllib.request, json, os, time
+import urllib.request, urllib.error, json, os, time
 
 base = f"https://api.tiendanube.com/2025-03/{os.environ['NUVEMSHOP_STORE_ID']}"
 token = os.environ['NUVEMSHOP_TOKEN']
@@ -80,14 +80,20 @@ headers = {'Authentication': f"bearer {token}", 'User-Agent': 'ClaudeSkill (cont
 products = []
 page = 1
 while True:
-    url = f"{base}/products?category_id=$CATEGORY_ID&published=true&fields=id,name,description&per_page=250&page={page}"
+    url = f"{base}/products?category_id=$CATEGORY_ID&published=true&fields=id,name,description&per_page=200&page={page}"
     req = urllib.request.Request(url, headers=headers)
-    with urllib.request.urlopen(req) as r:
-        batch = json.loads(r.read())
+    try:
+        with urllib.request.urlopen(req) as r:
+            batch = json.loads(r.read())
+    except urllib.error.HTTPError as e:
+        if e.code == 404:
+            batch = []
+        else:
+            raise
     if not batch:
         break
     products.extend(batch)
-    if len(batch) < 250:
+    if len(batch) < 200:
         break
     page += 1
     time.sleep(0.5)

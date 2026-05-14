@@ -37,7 +37,7 @@ fi
 
 ```bash
 python3 << 'EOF'
-import urllib.request, json, os, time
+import urllib.request, urllib.error, json, os, time
 from datetime import date, timedelta
 
 base = f"https://api.tiendanube.com/2025-03/{os.environ['NUVEMSHOP_STORE_ID']}"
@@ -51,10 +51,16 @@ all_orders = []
 page = 1
 print(f"Buscando pedidos dos últimos {DIAS} dias...")
 while True:
-    url = f"{base}/orders?payment_status=paid&created_at_min={date_from}&fields=total,shipping_cost_customer,shipping_cost_owner,shipping_pickup_type&per_page=200&page={page}"
+    url = f"{base}/orders?payment_status=paid&created_at_min={date_from}&fields=subtotal,total,discount&per_page=200&page={page}"
     req = urllib.request.Request(url, headers=headers)
-    with urllib.request.urlopen(req) as r:
-        batch = json.loads(r.read())
+    try:
+        with urllib.request.urlopen(req) as r:
+            batch = json.loads(r.read())
+    except urllib.error.HTTPError as e:
+        if e.code == 404:
+            batch = []
+        else:
+            raise
     if not batch:
         break
     all_orders.extend(batch)
@@ -62,6 +68,25 @@ while True:
         break
     page += 1
     time.sleep(0.5)
+
+# Fallback: se não houver pedidos no período, buscar histórico completo
+if not all_orders:
+    print(f"Sem pedidos nos últimos {DIAS} dias. Buscando histórico completo...")
+    page = 1
+    while True:
+        url = f"{base}/orders?payment_status=paid&fields=subtotal,total,discount&per_page=200&page={page}"
+        req = urllib.request.Request(url, headers=headers)
+        try:
+            with urllib.request.urlopen(req) as r:
+                batch = json.loads(r.read())
+        except urllib.error.HTTPError as e:
+            if e.code == 404: batch = []
+            else: raise
+        if not batch: break
+        all_orders.extend(batch)
+        if len(batch) < 200: break
+        page += 1
+        time.sleep(0.5)
 
 print(f"Total de pedidos: {len(all_orders)}")
 json.dump(all_orders, open('/tmp/ns_shipping_orders.json', 'w'))
@@ -75,100 +100,82 @@ EOF
 ```bash
 python3 << 'EOF'
 import json
-from collections import defaultdict
 
 orders = json.load(open('/tmp/ns_shipping_orders.json'))
 
-# Filtrar apenas pedidos com entrega (não retirada)
-delivery_orders = []
+# Calcular dados de frete implícito: total - subtotal - discount
+data = []
 for o in orders:
-    if o.get('shipping_pickup_type') == 'pickup':
-        continue
     try:
-        total = float(o.get('total', 0) or 0)
-        shipping_customer = float(o.get('shipping_cost_customer', 0) or 0)
-        shipping_owner    = float(o.get('shipping_cost_owner', 0) or 0)
+        subtotal = float(o.get('subtotal') or 0)
+        total    = float(o.get('total') or 0)
+        discount = float(o.get('discount') or 0)
     except (TypeError, ValueError):
         continue
-    if total > 0:
-        delivery_orders.append({
-            'total': total,
-            'shipping_customer': shipping_customer,
-            'shipping_owner': shipping_owner,
-            'paid_shipping': shipping_customer > 0
-        })
+    if subtotal <= 0:
+        continue
+    implied_ship = max(0.0, total - subtotal - discount)
+    data.append({'subtotal': subtotal, 'total': total, 'implied_ship': implied_ship})
 
-if not delivery_orders:
-    print("Nenhum pedido de entrega encontrado.")
+if not data:
+    print("Nenhum pedido encontrado.")
     exit()
 
-totals = sorted([o['total'] for o in delivery_orders])
-n = len(delivery_orders)
-avg_ticket = sum(totals) / n
-median_ticket = totals[n // 2]
-p25 = totals[n // 4]
-p75 = totals[3 * n // 4]
-
-avg_shipping_cost = sum(o['shipping_owner'] for o in delivery_orders if o['shipping_owner'] > 0)
-count_with_cost = sum(1 for o in delivery_orders if o['shipping_owner'] > 0)
-avg_shipping_cost = avg_shipping_cost / count_with_cost if count_with_cost > 0 else 0
-
-# Pedidos que já recebem frete grátis
-free_shipping_now = sum(1 for o in delivery_orders if not o['paid_shipping'])
+n = len(data)
+subtotals = sorted(o['subtotal'] for o in data)
+totals_sorted = sorted(o['total'] for o in data)
+avg_ticket = sum(o['total'] for o in data) / n
+ships = [o['implied_ship'] for o in data if o['implied_ship'] > 0]
+avg_ship = sum(ships) / len(ships) if ships else 0
+free_now = sum(1 for o in data if o['implied_ship'] == 0)
 
 print(f"\n===== ANÁLISE DE FRETE GRÁTIS =====")
-print(f"Pedidos de entrega analisados: {n:,}")
-print(f"Ticket médio: R$ {avg_ticket:.2f}")
-print(f"Mediana: R$ {median_ticket:.2f}")
-print(f"P25 / P75: R$ {p25:.2f} / R$ {p75:.2f}")
-print(f"Custo médio de frete (quando pago pelo lojista): R$ {avg_shipping_cost:.2f}")
-print(f"Pedidos já com frete grátis: {free_shipping_now} ({free_shipping_now/n*100:.1f}%)")
+print(f"Pedidos analisados: {n:,}")
+print(f"Ticket médio (total): R$ {avg_ticket:.2f}")
+print(f"Subtotal médio (só produtos): R$ {sum(subtotals)/n:.2f}")
+print(f"Frete médio cobrado: R$ {avg_ship:.2f}")
+print(f"Pedidos já com frete grátis: {free_now} ({free_now/n*100:.1f}%)")
 
-# Simular thresholds
-print(f"\n--- Simulação de Thresholds ---")
-print(f"\n{'Threshold':>12} {'Pedidos p/Frete Grátis':>22} {'% do Total':>12} {'Custo Total Frete':>20} {'Ticket Médio (acima)':>22}")
-print('-' * 95)
+# Thresholds baseados em subtotal (é o que o merchant controla)
+print(f"\n--- Simulação de Thresholds (baseado no valor dos produtos) ---")
+print(f"\n{'Threshold':>12} {'Elegíveis p/Frete Grátis':>24} {'% do Total':>12} {'Custo Estimado/mês':>22}")
+print('-' * 75)
 
-# Candidatos inteligentes: percentis e valores redondos próximos
 candidates = set()
 for pct in [0.4, 0.5, 0.55, 0.6, 0.65, 0.7, 0.75, 0.8]:
-    raw = totals[int(n * pct)]
-    # Arredondar para múltiplo de 10 mais próximo
-    candidates.add(round(raw / 10) * 10)
+    idx = max(0, int(n * pct) - 1)
+    raw = subtotals[idx]
+    candidates.add(max(10, round(raw / 10) * 10))
 
 for threshold in sorted(candidates):
-    above = [o for o in delivery_orders if o['total'] >= threshold]
+    above = [o for o in data if o['subtotal'] >= threshold]
     pct = len(above) / n * 100
-    total_freight_cost = len(above) * avg_shipping_cost
-    avg_above = sum(o['total'] for o in above) / len(above) if above else 0
+    monthly_cost = len(above) * avg_ship / 3  # 90d → /3 = mês
+    print(f"  R$ {threshold:>8,.0f}  {len(above):>22,}  {pct:>10.1f}%  R$ {monthly_cost:>18,.2f}/mês")
 
-    print(f"  R$ {threshold:>8,.0f}  {len(above):>20,}  {pct:>10.1f}%  R$ {total_freight_cost:>16,.2f}  R$ {avg_above:>19,.2f}")
-
-# Recomendação automática
+# Recomendação
 print(f"\n--- Recomendação ---")
-# Buscar threshold que captura ~65-70% dos pedidos com custo razoável
 ideal = None
 for threshold in sorted(candidates):
-    above = [o for o in delivery_orders if o['total'] >= threshold]
+    above = [o for o in data if o['subtotal'] >= threshold]
     pct = len(above) / n * 100
     if 60 <= pct <= 72:
         ideal = threshold
         break
+if not ideal and candidates:
+    # Pegar o que mais se aproxima de 65%
+    ideal = min(candidates, key=lambda t: abs(sum(1 for o in data if o['subtotal'] >= t)/n - 0.65))
 
 if ideal:
-    above = [o for o in delivery_orders if o['total'] >= ideal]
-    extra_cost = len(above) * avg_shipping_cost
+    above = [o for o in data if o['subtotal'] >= ideal]
     avg_above = sum(o['total'] for o in above) / len(above)
+    monthly_cost = len(above) * avg_ship / 3
     uplift = avg_above - avg_ticket
-    print(f"  Threshold recomendado: R$ {ideal:.0f}")
-    print(f"  Captura {len(above)/n*100:.1f}% dos pedidos ({len(above):,} de {n:,})")
-    print(f"  Ticket médio acima do threshold: R$ {avg_above:.2f} (+R$ {uplift:.2f} vs média atual)")
-    print(f"  Custo mensal estimado de frete: R$ {extra_cost/3:,.2f}/mês (baseado em 90d)")
-    print(f"  Custo por pedido: R$ {avg_shipping_cost:.2f} de frete médio absorvido pelo lojista")
-    margin_impact = avg_shipping_cost / avg_above * 100
-    print(f"  Impacto na margem: -{margin_impact:.1f}% do ticket médio")
-else:
-    print(f"  Experimente threshold entre R$ {p75:.0f} e R$ {p75*1.1:.0f} para capturar os 70% maiores pedidos")
+    print(f"  Threshold recomendado: R$ {ideal:.0f} (valor dos produtos no carrinho)")
+    print(f"  Elegíveis para frete grátis: {len(above)/n*100:.1f}% dos pedidos ({len(above):,} de {n:,})")
+    print(f"  Ticket médio dos pedidos acima: R$ {avg_above:.2f} (+R$ {uplift:.2f} vs média atual)")
+    print(f"  Custo estimado de frete absorvido: R$ {monthly_cost:,.2f}/mês")
+    print(f"  Frete médio por pedido: R$ {avg_ship:.2f}")
 EOF
 ```
 

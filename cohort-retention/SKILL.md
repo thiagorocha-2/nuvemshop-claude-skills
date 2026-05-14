@@ -35,7 +35,7 @@ fi
 
 ```bash
 python3 << 'EOF'
-import urllib.request, json, os, time
+import urllib.request, urllib.error, json, os, time
 from datetime import date, timedelta
 
 base = f"https://api.tiendanube.com/2025-03/{os.environ['NUVEMSHOP_STORE_ID']}"
@@ -51,8 +51,14 @@ print(f"Buscando pedidos dos últimos {MESES} meses...")
 while True:
     url = f"{base}/orders?payment_status=paid&created_at_min={date_from}&fields=customer,created_at&per_page=200&page={page}"
     req = urllib.request.Request(url, headers=headers)
-    with urllib.request.urlopen(req) as r:
-        batch = json.loads(r.read())
+    try:
+        with urllib.request.urlopen(req) as r:
+            batch = json.loads(r.read())
+    except urllib.error.HTTPError as e:
+        if e.code == 404:
+            batch = []
+        else:
+            raise
     if not batch:
         break
     all_orders.extend(batch)

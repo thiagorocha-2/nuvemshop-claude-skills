@@ -21,7 +21,7 @@ if [ -z "$NUVEMSHOP_STORE_ID" ] || [ -z "$NUVEMSHOP_TOKEN" ]; then
   echo "Credenciais não configuradas. Execute:"
   echo "  export NUVEMSHOP_STORE_ID=<seu_store_id>"
   echo "  export NUVEMSHOP_TOKEN=<seu_access_token>"
-  echo "Como obter: https://partners.nuvemshop.com.br"
+  echo "Como obter: Admin da loja > Potencializar > Aplicativos sob medida"
   exit 1
 fi
 ```
@@ -42,7 +42,7 @@ DIAS=90
 DATE_FROM=$(python3 -c "from datetime import date, timedelta; print(date.today() - timedelta(days=$DIAS))")
 
 python3 << EOF
-import urllib.request, json, os, time
+import urllib.request, urllib.error, json, os, time
 
 base = f"https://api.tiendanube.com/2025-03/{os.environ['NUVEMSHOP_STORE_ID']}"
 token = os.environ['NUVEMSHOP_TOKEN']
@@ -57,8 +57,14 @@ page = 1
 while True:
     url = f"{base}/orders?payment_status=paid&created_at_min=$DATE_FROM&fields=total,payment_details,created_at&per_page=200&page={page}"
     req = urllib.request.Request(url, headers=headers)
-    with urllib.request.urlopen(req) as r:
-        batch = json.loads(r.read())
+    try:
+        with urllib.request.urlopen(req) as r:
+            batch = json.loads(r.read())
+    except urllib.error.HTTPError as e:
+        if e.code == 404:
+            batch = []
+        else:
+            raise
     if not batch:
         break
     all_orders.extend(batch)

@@ -6,19 +6,29 @@ Para usar as skills você precisa de duas informações: **Store ID** e **Access
 
 ## 1. Store ID
 
-O Store ID aparece diretamente na URL do painel admin da sua loja:
+O Store ID é o número que aparece na URL do admin da sua loja. Se a URL usa subdomínio customizado (ex: `minhaloja.lojavirtualnuvem.com.br/admin/dashboard`), navegue até qualquer produto ou pedido — o número geralmente aparece no caminho.
 
-```
-https://www.nuvemshop.com.br/admin/[STORE_ID]/...
-```
-
-Exemplo: se a URL for `.../admin/892341/...`, seu Store ID é `892341`.
+Outra forma: faça uma chamada de teste com o token e veja o campo `user_id` na resposta.
 
 ---
 
-## 2. Access Token
+## 2. Access Token — Caminho rápido (recomendado)
 
-O Access Token exige criar um aplicativo no Portal de Parceiros. São 5 passos, leva cerca de 5 minutos.
+Direto no painel admin da sua loja, sem precisar do Portal de Parceiros:
+
+1. Acesse o admin da sua loja
+2. No menu lateral: **Potencializar → Aplicativos sob medida**
+3. Clique em **"Criar aplicativo"**
+4. Dê um nome (ex: `Claude Skills`) e selecione **"Acesso total"**
+5. Copie o token gerado — ele **não expira**
+
+> Se não encontrar "Aplicativos sob medida" no menu, use o caminho alternativo abaixo via Portal de Parceiros.
+
+---
+
+## 2b. Access Token — Caminho alternativo (via Portal de Parceiros)
+
+Use este caminho se a sua loja não tiver a opção "Aplicativos sob medida". São 5 passos, leva cerca de 5 minutos.
 
 ### Passo 1 — Criar conta no Portal de Parceiros
 

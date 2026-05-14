@@ -24,10 +24,9 @@ if [ -z "$NUVEMSHOP_STORE_ID" ] || [ -z "$NUVEMSHOP_TOKEN" ]; then
   echo "  export NUVEMSHOP_TOKEN=<seu_access_token>"
   echo ""
   echo "Como obter:"
-  echo "  1. Acesse: https://partners.nuvemshop.com.br"
-  echo "  2. Crie um app (ou use um existente)"
-  echo "  3. Instale o app na sua loja para gerar o access_token"
-  echo "  4. O store_id aparece na URL do admin: /admin/[STORE_ID]/"
+  echo "  1. No admin da loja: Potencializar > Aplicativos sob medida"
+  echo "  2. Crie um app e copie o token gerado"
+  echo "  3. O store_id aparece na URL do admin: /admin/[STORE_ID]/"
   exit 1
 fi
 echo "Credenciais OK. Store ID: $NUVEMSHOP_STORE_ID"

@@ -38,7 +38,7 @@ fi
 
 ```bash
 python3 << 'EOF'
-import urllib.request, json, os, time
+import urllib.request, urllib.error, json, os, time
 
 base = f"https://api.tiendanube.com/2025-03/{os.environ['NUVEMSHOP_STORE_ID']}"
 token = os.environ['NUVEMSHOP_TOKEN']
@@ -48,14 +48,20 @@ all_products = []
 page = 1
 print("Buscando produtos...")
 while True:
-    url = f"{base}/products?published=true&per_page=250&page={page}&fields=id,name,variants"
+    url = f"{base}/products?published=true&per_page=200&page={page}&fields=id,name,variants"
     req = urllib.request.Request(url, headers=headers)
-    with urllib.request.urlopen(req) as r:
-        batch = json.loads(r.read())
+    try:
+        with urllib.request.urlopen(req) as r:
+            batch = json.loads(r.read())
+    except urllib.error.HTTPError as e:
+        if e.code == 404:
+            batch = []
+        else:
+            raise
     if not batch:
         break
     all_products.extend(batch)
-    if len(batch) < 250:
+    if len(batch) < 200:
         break
     page += 1
     time.sleep(0.5)

@@ -37,7 +37,7 @@ Nenhum parâmetro necessário. A skill usa janela padrão de 12 meses para RFM.
 
 ```bash
 python3 << 'EOF'
-import urllib.request, json, os, time
+import urllib.request, urllib.error, json, os, time
 from datetime import date, timedelta
 
 base = f"https://api.tiendanube.com/2025-03/{os.environ['NUVEMSHOP_STORE_ID']}"
@@ -52,8 +52,14 @@ print(f"Buscando pedidos desde {date_from}...")
 while True:
     url = f"{base}/orders?payment_status=paid&created_at_min={date_from}&fields=customer,total,created_at&per_page=200&page={page}"
     req = urllib.request.Request(url, headers=headers)
-    with urllib.request.urlopen(req) as r:
-        batch = json.loads(r.read())
+    try:
+        with urllib.request.urlopen(req) as r:
+            batch = json.loads(r.read())
+    except urllib.error.HTTPError as e:
+        if e.code == 404:
+            batch = []
+        else:
+            raise
     if not batch:
         break
     all_orders.extend(batch)
@@ -73,7 +79,7 @@ EOF
 
 ```bash
 python3 << 'EOF'
-import urllib.request, json, os, time
+import urllib.request, urllib.error, json, os, time
 
 base = f"https://api.tiendanube.com/2025-03/{os.environ['NUVEMSHOP_STORE_ID']}"
 token = os.environ['NUVEMSHOP_TOKEN']
@@ -86,8 +92,14 @@ print("Buscando clientes...")
 while True:
     url = f"{base}/customers?fields=id,name,email,phone,total_spent,accepts_marketing&per_page=250&page={page}"
     req = urllib.request.Request(url, headers=headers)
-    with urllib.request.urlopen(req) as r:
-        batch = json.loads(r.read())
+    try:
+        with urllib.request.urlopen(req) as r:
+            batch = json.loads(r.read())
+    except urllib.error.HTTPError as e:
+        if e.code == 404:
+            batch = []
+        else:
+            raise
     if not batch:
         break
     all_customers.extend(batch)
