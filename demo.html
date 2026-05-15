@@ -1,0 +1,1021 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Nuvemshop Claude Skills — Demo</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;600;700&display=swap">
+<style>
+  :root {
+    --bg: #010B23;
+    --surface: #0c1326;
+    --surface2: #111d36;
+    --border: #1c2d52;
+    --text: #e2e8f0;
+    --muted: #777b8c;
+    --accent: #0050c3;
+    --accent2: #cdd6fc;
+    --green: #0ca76b;
+    --yellow: #f5c542;
+    --red: #ef4444;
+    --orange: #f4a142;
+    --cyan: #38bdf8;
+    --prompt-bg: #080f20;
+    --card-shadow: 0 24px 48px -12px rgba(0,0,0,0.5), 0 8px 24px -8px rgba(0,80,195,0.08);
+  }
+
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+
+  body {
+    font-family: 'Plus Jakarta Sans', -apple-system, BlinkMacSystemFont, "Helvetica Neue", arial, sans-serif;
+    background: var(--bg);
+    color: var(--text);
+    min-height: 100vh;
+  }
+
+  header {
+    border-bottom: 1px solid var(--border);
+    padding: 18px 40px;
+    display: flex;
+    align-items: center;
+    gap: 16px;
+    position: sticky;
+    top: 0;
+    background: rgba(1, 11, 35, 0.95);
+    backdrop-filter: blur(5px);
+    z-index: 100;
+  }
+
+  .logo {
+    font-size: 15px;
+    font-weight: 700;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+  }
+
+  .logo-badge {
+    background: var(--accent);
+    color: white;
+    font-size: 11px;
+    padding: 2px 10px;
+    border-radius: 100px;
+    font-weight: 600;
+  }
+
+  .subtitle { font-size: 13px; color: var(--muted); margin-left: auto; }
+
+  .container { display: flex; min-height: calc(100vh - 57px); }
+
+  nav {
+    width: 220px;
+    flex-shrink: 0;
+    border-right: 1px solid var(--border);
+    padding: 24px 0;
+    position: sticky;
+    top: 57px;
+    height: calc(100vh - 57px);
+    overflow-y: auto;
+  }
+
+  .nav-section {
+    padding: 0 16px;
+    margin-bottom: 10px;
+    font-size: 11px;
+    font-weight: 700;
+    color: var(--muted);
+    text-transform: uppercase;
+    letter-spacing: 0.08em;
+  }
+
+  .nav-item {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    padding: 7px 16px;
+    font-size: 12.5px;
+    color: var(--muted);
+    cursor: pointer;
+    text-decoration: none;
+    transition: all ease-in-out 0.15s;
+    border-left: 2px solid transparent;
+  }
+
+  .nav-item:hover { color: var(--text); background: var(--surface2); }
+  .nav-item.active { color: var(--accent2); border-left-color: var(--accent); background: rgba(0,80,195,0.12); }
+
+  .nav-dot { width: 6px; height: 6px; border-radius: 50%; background: var(--muted); flex-shrink: 0; }
+  .nav-item.active .nav-dot { background: var(--accent); }
+
+  main { flex: 1; padding: 36px 48px; max-width: 920px; }
+
+  .hero { margin-bottom: 40px; }
+  .hero h1 { font-size: 24px; font-weight: 700; margin-bottom: 8px; }
+  .hero p { font-size: 14px; color: var(--muted); line-height: 1.6; max-width: 580px; }
+
+  .hero-tags { display: flex; gap: 8px; margin-top: 14px; flex-wrap: wrap; }
+  .tag { font-size: 11px; padding: 3px 10px; border-radius: 100px; border: 1px solid var(--border); color: var(--muted); font-weight: 600; }
+  .tag.latam { border-color: rgba(244,161,66,0.3); color: var(--orange); background: rgba(244,161,66,0.08); }
+
+  /* NOTICE BANNER */
+  .notice {
+    background: rgba(0,80,195,0.08);
+    border: 1px solid rgba(0,80,195,0.25);
+    border-radius: 12px;
+    padding: 12px 16px;
+    margin-bottom: 36px;
+    font-size: 13px;
+    color: var(--accent2);
+    line-height: 1.5;
+  }
+  .notice strong { color: #fff; }
+  .notice span { color: var(--muted); }
+
+  /* SKILL CARD */
+  .skill-card {
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: 16px;
+    margin-bottom: 28px;
+    overflow: hidden;
+    scroll-margin-top: 76px;
+    box-shadow: var(--card-shadow);
+    transition: all ease-in-out 0.15s;
+  }
+
+  .skill-header {
+    padding: 18px 22px 14px;
+    border-bottom: 1px solid var(--border);
+    display: flex;
+    align-items: flex-start;
+    gap: 14px;
+  }
+
+  .skill-num {
+    font-size: 11px;
+    font-weight: 700;
+    color: var(--accent2);
+    background: rgba(0,80,195,0.15);
+    border: 1px solid rgba(0,80,195,0.3);
+    padding: 2px 8px;
+    border-radius: 6px;
+    flex-shrink: 0;
+    margin-top: 2px;
+  }
+
+  .skill-meta { flex: 1; }
+  .skill-name { font-size: 15px; font-weight: 700; margin-bottom: 4px; }
+  .skill-cmd {
+    font-family: 'SF Mono', 'Fira Code', monospace;
+    font-size: 12px;
+    color: var(--accent2);
+    background: rgba(0,80,195,0.12);
+    padding: 2px 8px;
+    border-radius: 6px;
+    display: inline-block;
+    margin-bottom: 6px;
+  }
+  .skill-desc { font-size: 13px; color: var(--muted); line-height: 1.5; }
+
+  .latam-badge {
+    font-size: 10px;
+    padding: 3px 10px;
+    border-radius: 100px;
+    background: rgba(244,161,66,0.1);
+    border: 1px solid rgba(244,161,66,0.3);
+    color: var(--orange);
+    font-weight: 700;
+    flex-shrink: 0;
+    margin-top: 4px;
+  }
+
+  /* PROMPT */
+  .prompt-block {
+    background: var(--prompt-bg);
+    border-bottom: 1px solid var(--border);
+    padding: 12px 22px;
+    font-family: 'SF Mono', 'Fira Code', monospace;
+    font-size: 13px;
+    display: flex;
+    align-items: center;
+    gap: 10px;
+  }
+  .prompt-label { font-size: 10px; font-weight: 700; color: var(--muted); text-transform: uppercase; letter-spacing: 0.08em; flex-shrink: 0; font-family: 'Plus Jakarta Sans', sans-serif; }
+  .prompt-slash { color: var(--accent2); }
+  .prompt-args { color: #8ba4cc; }
+
+  /* OUTPUT */
+  .output-block {
+    padding: 18px 22px;
+    font-family: 'SF Mono', 'Fira Code', monospace;
+    font-size: 12px;
+    line-height: 1.7;
+    white-space: pre;
+    overflow-x: auto;
+    color: var(--text);
+  }
+
+  .c-header { color: #60a5fa; font-weight: 700; }
+  .c-dim { color: #2a3d5c; }
+  .c-muted { color: var(--muted); }
+  .c-green { color: var(--green); }
+  .c-yellow { color: var(--yellow); }
+  .c-orange { color: var(--orange); }
+  .c-red { color: var(--red); }
+  .c-accent { color: var(--accent2); }
+  .c-divider { color: #1c2d52; }
+
+  /* DATA NOTE */
+  .data-note {
+    padding: 10px 22px;
+    border-top: 1px solid var(--border);
+    background: rgba(0,0,0,0.2);
+    font-size: 11.5px;
+    color: #3d5280;
+    display: flex;
+    align-items: center;
+    gap: 6px;
+  }
+  .data-note strong { color: var(--muted); }
+
+  /* NEXT STEPS */
+  .next-steps {
+    padding: 12px 22px;
+    border-top: 1px solid var(--border);
+    background: rgba(0,80,195,0.04);
+  }
+  .next-steps-label { font-size: 10px; font-weight: 700; color: var(--muted); text-transform: uppercase; letter-spacing: 0.06em; margin-bottom: 8px; }
+  .next-steps-list { display: flex; flex-wrap: wrap; gap: 6px; }
+  .pill { font-size: 11.5px; padding: 4px 12px; border-radius: 100px; border: 1px solid var(--border); color: var(--muted); background: var(--surface2); font-weight: 600; }
+  .pill.primary { border-color: rgba(0,80,195,0.4); color: var(--accent2); background: rgba(0,80,195,0.12); }
+
+  /* SETUP CARD */
+  .setup-card {
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: 16px;
+    margin-bottom: 40px;
+    overflow: hidden;
+    box-shadow: var(--card-shadow);
+  }
+  .setup-header {
+    padding: 24px 28px 20px;
+    background: linear-gradient(135deg, rgba(0,80,195,0.14) 0%, rgba(0,80,195,0.03) 100%);
+    border-bottom: 1px solid var(--border);
+  }
+  .setup-header h2 { font-size: 17px; font-weight: 700; margin-bottom: 5px; }
+  .setup-header p { font-size: 13px; color: var(--muted); line-height: 1.5; }
+  .setup-steps { padding: 24px 28px; display: flex; flex-direction: column; gap: 22px; }
+  .setup-step { display: flex; gap: 16px; align-items: flex-start; }
+  .step-num {
+    width: 28px; height: 28px; border-radius: 50%;
+    background: rgba(0,80,195,0.15); border: 1px solid rgba(0,80,195,0.3);
+    color: var(--accent2); font-size: 12px; font-weight: 700;
+    display: flex; align-items: center; justify-content: center;
+    flex-shrink: 0; margin-top: 1px;
+  }
+  .step-content { flex: 1; }
+  .step-title { font-size: 14px; font-weight: 700; margin-bottom: 4px; }
+  .step-desc { font-size: 13px; color: var(--muted); line-height: 1.55; margin-bottom: 10px; }
+  .step-desc a { color: var(--accent2); text-decoration: none; }
+  .step-desc a:hover { text-decoration: underline; }
+  .step-code {
+    font-family: 'SF Mono', 'Fira Code', monospace;
+    font-size: 12px;
+    background: var(--prompt-bg);
+    border: 1px solid var(--border);
+    border-radius: 8px;
+    padding: 12px 16px;
+    color: var(--accent2);
+    overflow-x: auto;
+    white-space: pre;
+    line-height: 1.7;
+  }
+  .step-code .sc-dim { color: #3d5280; }
+  .step-code .sc-green { color: var(--green); }
+  .step-note { font-size: 11.5px; color: #3d5280; margin-top: 8px; line-height: 1.4; }
+  .step-note strong { color: var(--muted); }
+  .setup-divider { height: 1px; background: var(--border); margin: 0 -28px; }
+</style>
+</head>
+<body>
+
+<header>
+  <div class="logo">Nuvemshop Claude Skills <span class="logo-badge">13 skills</span></div>
+  <span class="subtitle">Outputs reais — testado via API em loja real</span>
+</header>
+
+<div class="container">
+  <nav>
+    <div class="nav-section" style="margin-bottom:12px">Início</div>
+    <a class="nav-item" href="#setup"><div class="nav-dot"></div>Como instalar</a>
+    <div class="nav-section" style="margin-top:14px;margin-bottom:12px">Skills</div>
+    <a class="nav-item active" href="#payment"><div class="nav-dot"></div>payment-mix-analyzer</a>
+    <a class="nav-item" href="#rfm"><div class="nav-dot"></div>rfm-segmentation</a>
+    <a class="nav-item" href="#stockout"><div class="nav-dot"></div>stockout-predictor</a>
+    <a class="nav-item" href="#shipping"><div class="nav-dot"></div>shipping-optimizer</a>
+    <a class="nav-item" href="#crosssell"><div class="nav-dot"></div>cross-sell-recommender</a>
+    <a class="nav-item" href="#abandonment"><div class="nav-dot"></div>abandonment-analysis</a>
+    <a class="nav-item" href="#cohort"><div class="nav-dot"></div>cohort-retention</a>
+    <a class="nav-item" href="#margin"><div class="nav-dot"></div>price-margin-analysis</a>
+    <a class="nav-item" href="#seo"><div class="nav-dot"></div>seo-meta-generator</a>
+    <a class="nav-item" href="#rewriter"><div class="nav-dot"></div>product-description-rewriter</a>
+    <a class="nav-item" href="#bulkprice"><div class="nav-dot"></div>bulk-price-updater</a>
+    <a class="nav-item" href="#cataloghealth"><div class="nav-dot"></div>catalog-health</a>
+    <a class="nav-item" href="#digest"><div class="nav-dot"></div>daily-digest</a>
+  </nav>
+
+  <main>
+    <div class="hero">
+      <h1>13 Claude Skills para Nuvemshop</h1>
+      <p>Cada skill conecta diretamente na API da sua loja e entrega análises em 2 minutos — sem planilha, sem exportação manual.</p>
+      <div class="hero-tags">
+        <span class="tag">Claude Code</span>
+        <span class="tag">API Nuvemshop</span>
+        <span class="tag">Python · curl</span>
+      </div>
+    </div>
+
+    <div class="notice">
+      <strong>Projeto pessoal, não oficial.</strong> <span>Estas skills foram criadas por <strong style="color:var(--accent2)">Thiago Rocha</strong> e não têm relação com a Nuvemshop — a empresa não oferece suporte a este projeto. Use por sua conta e risco e sempre revise os dados antes de aplicar qualquer alteração na sua loja.</span>
+    </div>
+    <div class="notice" style="margin-top:-24px">
+      <strong>Outputs reais.</strong> <span>Todos os resultados abaixo foram gerados via API da Nuvemshop durante os testes de desenvolvimento, usando uma loja com volume reduzido. Em uma loja real com centenas de pedidos, as tabelas ficam mais ricas — mas o formato e os campos são exatamente estes.</span>
+    </div>
+
+    <!-- SETUP -->
+    <div class="setup-card" id="setup">
+      <div class="setup-header">
+        <h2>Como instalar e usar</h2>
+        <p>Configure uma vez, use para sempre. Em ~5 minutos sua loja está conectada ao Claude.</p>
+      </div>
+      <div class="setup-steps">
+
+        <div class="setup-step">
+          <div class="step-num">1</div>
+          <div class="step-content">
+            <div class="step-title">Instale o Claude Code</div>
+            <div class="step-desc">O Claude Code é o CLI da Anthropic que roda no seu terminal e interpreta as skills. Requer Node.js 18+.</div>
+            <div class="step-code">npm install -g @anthropic-ai/claude-code</div>
+            <div class="step-note">Após instalar, rode <strong>claude</strong> no terminal para confirmar que está funcionando.</div>
+          </div>
+        </div>
+
+        <div class="setup-step">
+          <div class="step-num">2</div>
+          <div class="step-content">
+            <div class="step-title">Copie as skills para a pasta do Claude</div>
+            <div class="step-desc">Cada skill é um arquivo <strong>SKILL.md</strong> com instruções que o Claude lê automaticamente ao ser invocado. A estrutura é <code style="font-family:monospace;font-size:11px;color:var(--accent2)">~/.claude/skills/&lt;nome-da-skill&gt;/SKILL.md</code>.</div>
+            <div class="step-code"><span class="sc-dim"># Clone o repositório</span>
+git clone https://github.com/thiagorocha-2/nuvemshop-claude-skills
+
+<span class="sc-dim"># Copie todas as 13 skills de uma vez</span>
+mkdir -p ~/.claude/skills
+cp -r nuvemshop-claude-skills/*/  ~/.claude/skills/</div>
+            <div class="step-note">Cada pasta é independente — copie só as skills que quiser usar.</div>
+          </div>
+        </div>
+
+        <div class="setup-step">
+          <div class="step-num">3</div>
+          <div class="step-content">
+            <div class="step-title">Obtenha as credenciais da Nuvemshop</div>
+            <div class="step-desc">No painel admin da sua loja: <strong>Potencializar → Aplicativos sob medida</strong>. Copie o <strong>Store ID</strong> (número na URL) e o <strong>Access Token</strong> gerado.</div>
+            <div class="step-note">O token não expira — você só precisa fazer isso uma vez por loja.</div>
+          </div>
+        </div>
+
+        <div class="setup-step">
+          <div class="step-num">4</div>
+          <div class="step-content">
+            <div class="step-title">Configure as variáveis de ambiente</div>
+            <div class="step-desc">As skills leem as credenciais via variáveis de ambiente. Adicione ao seu <strong>~/.zshrc</strong> ou <strong>~/.bashrc</strong> para não precisar redigitar.</div>
+            <div class="step-code"><span class="sc-dim"># Adicione ao ~/.zshrc (permanente)</span>
+export NUVEMSHOP_STORE_ID=<span class="sc-green">seu_store_id</span>
+export NUVEMSHOP_TOKEN=<span class="sc-green">seu_access_token</span>
+
+<span class="sc-dim"># Recarregue o terminal</span>
+source ~/.zshrc</div>
+          </div>
+        </div>
+
+        <div class="setup-step">
+          <div class="step-num">5</div>
+          <div class="step-content">
+            <div class="step-title">Abra o Claude Code e invoque qualquer skill</div>
+            <div class="step-desc">Na pasta do seu projeto (ou em qualquer lugar), abra o Claude Code e digite o nome da skill com <strong>/</strong>. O Claude detecta automaticamente os arquivos SKILL.md e executa o fluxo.</div>
+            <div class="step-code"><span class="sc-dim"># No terminal</span>
+claude
+
+<span class="sc-dim"># Dentro do Claude Code, invoque qualquer skill:</span>
+/daily-digest
+/catalog-health
+/rfm-segmentation</div>
+            <div class="step-note">Cada skill guia você pelo fluxo — coleta dados, exibe preview e pede confirmação antes de qualquer escrita na API.</div>
+          </div>
+        </div>
+
+      </div>
+    </div>
+
+    <!-- 1. PAYMENT MIX -->
+    <div class="skill-card" id="payment">
+      <div class="skill-header">
+        <span class="skill-num">01</span>
+        <div class="skill-meta">
+          <div class="skill-name">Analisador PIX vs Parcelamento</div>
+          <div class="skill-cmd">/payment-mix-analyzer</div>
+          <div class="skill-desc">Compara ticket médio e participação no GMV por meio de pagamento. Identifica oportunidade de desconto PIX ou ajuste de parcelamento.</div>
+        </div>
+        <span class="latam-badge">LATAM only</span>
+      </div>
+      <div class="prompt-block">
+        <span class="prompt-label">Prompt</span>
+        <span><span class="prompt-slash">/payment-mix-analyzer</span> <span class="prompt-args">dias=90</span></span>
+      </div>
+      <div class="output-block"><span class="c-header">===== ANÁLISE DE MIX DE PAGAMENTOS (histórico completo) =====</span>
+
+<span class="c-muted">Total de pedidos pagos analisados: 43</span>
+
+<span class="c-header">Meio de Pagamento          Pedidos  % Pedidos       GMV (R$)    % GMV   Ticket Médio</span>
+<span class="c-divider">-------------------------------------------------------------------------------------</span>
+Cartão 1x (à vista)             41      95.3%        360.55    95.6%          8.79
+Custom                           1       2.3%         15.46     4.1%         15.46
+PIX                              1       2.3%          1.00     0.3%          1.00
+<span class="c-divider">-------------------------------------------------------------------------------------</span>
+<span class="c-yellow">TOTAL                           43     100.0%        377.01   100.0%          8.77</span>
+
+<span class="c-header">--- Insights ---</span>
+Meio dominante: Cartão 1x (à vista) (95.3% dos pedidos)</div>
+      <div class="data-note">⬡ <strong>Loja de teste</strong> — em lojas reais aparecerão PIX, boleto e múltiplas faixas de parcelamento com volumes significativos</div>
+      <div class="next-steps">
+        <div class="next-steps-label">Próximos passos sugeridos pela skill</div>
+        <div class="next-steps-list">
+          <span class="pill primary">Ativar desconto PIX se ticket parcelado > PIX</span>
+          <span class="pill">/abandonment-analysis</span>
+          <span class="pill">Comparar dias=30 vs dias=90</span>
+        </div>
+      </div>
+    </div>
+
+    <!-- 2. RFM -->
+    <div class="skill-card" id="rfm">
+      <div class="skill-header">
+        <span class="skill-num">02</span>
+        <div class="skill-meta">
+          <div class="skill-name">Segmentação RFM para WhatsApp</div>
+          <div class="skill-cmd">/rfm-segmentation</div>
+          <div class="skill-desc">Classifica clientes em segmentos RFM e exporta CSV com telefone pronto para WhatsApp Business ou RD Station.</div>
+        </div>
+        <span class="latam-badge">LATAM only</span>
+      </div>
+      <div class="prompt-block">
+        <span class="prompt-label">Prompt</span>
+        <span><span class="prompt-slash">/rfm-segmentation</span></span>
+      </div>
+      <div class="output-block"><span class="c-header">===== SEGMENTAÇÃO RFM =====</span>
+
+<span class="c-muted">Pedidos analisados: 43 | Clientes únicos: 12</span>
+
+<span class="c-header">Segmento                  Clientes    % Base</span>
+<span class="c-divider">-----------------------------------------------</span>
+<span class="c-orange">Em Risco                         8    66.7%</span>
+<span class="c-red">Dormente                         4    33.3%</span>
+<span class="c-divider">-----------------------------------------------</span>
+<span class="c-yellow">TOTAL                           12   100.0%</span>
+
+Clientes com telefone para WhatsApp: <span class="c-green">11</span>
+Clientes que aceitam marketing:      <span class="c-green">6</span>
+
+<span class="c-accent">→ CSV exportado: ~/Downloads/rfm_segmentation.csv</span></div>
+      <div class="data-note">⬡ <strong>Loja de teste</strong> — em lojas com histórico maior surgem segmentos Campeão, Cliente Fiel e Novo Cliente</div>
+      <div class="next-steps">
+        <div class="next-steps-label">Próximos passos sugeridos pela skill</div>
+        <div class="next-steps-list">
+          <span class="pill primary">Importar CSV no WhatsApp Business</span>
+          <span class="pill">Campanha reativação Em Risco</span>
+          <span class="pill">/cohort-retention</span>
+        </div>
+      </div>
+    </div>
+
+    <!-- 3. STOCKOUT -->
+    <div class="skill-card" id="stockout">
+      <div class="skill-header">
+        <span class="skill-num">03</span>
+        <div class="skill-meta">
+          <div class="skill-name">Previsão de Ruptura de Estoque</div>
+          <div class="skill-cmd">/stockout-predictor</div>
+          <div class="skill-desc">Calcula velocity de vendas por SKU (últimos 30 dias) e prevê quais vão zerar antes do prazo de alerta configurado.</div>
+        </div>
+      </div>
+      <div class="prompt-block">
+        <span class="prompt-label">Prompt</span>
+        <span><span class="prompt-slash">/stockout-predictor</span> <span class="prompt-args">dias_alerta=14</span></span>
+      </div>
+      <div class="output-block"><span class="c-header">===== PREVISÃO DE RUPTURA DE ESTOQUE =====</span>
+<span class="c-muted">Threshold: 14 dias | Velocity baseada em 365 dias de histórico</span>
+
+<span class="c-muted">Produtos com histórico de vendas: 10 | Estoque coletado de 7 produtos...</span>
+
+<span class="c-green">✅ OK — mais de 28 dias (2 SKUs)</span>
+
+<span class="c-muted">Nota: sem vendas nos últimos 30d — velocity calculada pelo histórico anual.
+Todos os SKUs com stock_management=true têm estoque suficiente para o ritmo atual.</span>
+
+Resumo: <span class="c-green">0 zerados</span> | <span class="c-green">0 críticos</span> | <span class="c-green">0 em atenção</span> | <span class="c-green">2 OK</span></div>
+      <div class="data-note">⬡ <strong>Dados reais</strong> — 10 SKUs com histórico de vendas, 2 com stock_management ativo. Sem volume recente, velocity calculada pelo histórico anual. Em lojas com vendas diárias a tabela exibe dias restantes por SKU com alertas críticos</div>
+      <div class="next-steps">
+        <div class="next-steps-label">Próximos passos sugeridos pela skill</div>
+        <div class="next-steps-list">
+          <span class="pill primary">Repor ou pausar Top em linho ECO Preto</span>
+          <span class="pill">Rodar novamente em 7 dias</span>
+          <span class="pill">/price-margin-analysis</span>
+        </div>
+      </div>
+    </div>
+
+    <!-- 4. SHIPPING -->
+    <div class="skill-card" id="shipping">
+      <div class="skill-header">
+        <span class="skill-num">04</span>
+        <div class="skill-meta">
+          <div class="skill-name">Otimizador de Frete Grátis</div>
+          <div class="skill-cmd">/shipping-optimizer</div>
+          <div class="skill-desc">Analisa distribuição de pedidos e calcula o threshold de frete grátis que maximiza ticket médio sem destruir margem.</div>
+        </div>
+        <span class="latam-badge">LATAM only</span>
+      </div>
+      <div class="prompt-block">
+        <span class="prompt-label">Prompt</span>
+        <span><span class="prompt-slash">/shipping-optimizer</span> <span class="prompt-args">dias=90</span></span>
+      </div>
+      <div class="output-block"><span class="c-header">===== ANÁLISE DE FRETE GRÁTIS =====</span>
+
+Pedidos analisados:                 43
+Ticket médio (total):               R$ 8.77
+Subtotal médio (só produtos):       R$ 7.24
+Frete médio cobrado:                R$ 2.27
+Pedidos já com frete grátis:        14 (32.6%)
+
+<span class="c-header">--- Simulação de Thresholds ---</span>
+
+<span class="c-header">   Threshold          Elegíveis   % do Total     Custo Est./mês</span>
+<span class="c-divider">------------------------------------------------------------------</span>
+  R$   10.00                 11       25.6%    R$       8.31/mês
+
+<span class="c-header">--- Recomendação ---</span>
+<span class="c-green">  Threshold recomendado: R$ 10</span>
+  Elegíveis: 25.6% dos pedidos (11 de 43)
+  Ticket médio acima do threshold: R$ 22.03 (+R$ 13.26 vs média)
+  Custo estimado de frete absorvido: R$ 8.31/mês
+  Frete médio por pedido: R$ 2.27</div>
+      <div class="data-note">⬡ <strong>Dados reais da loja</strong> — tickets pequenos porque é loja de teste. Em lojas reais os thresholds ficam na faixa R$100–R$300</div>
+      <div class="next-steps">
+        <div class="next-steps-label">Próximos passos sugeridos pela skill</div>
+        <div class="next-steps-list">
+          <span class="pill primary">Ativar threshold e exibir barra de progresso no carrinho</span>
+          <span class="pill">Teste A/B por 2 semanas</span>
+          <span class="pill">/price-margin-analysis</span>
+        </div>
+      </div>
+    </div>
+
+    <!-- 5. CROSS-SELL -->
+    <div class="skill-card" id="crosssell">
+      <div class="skill-header">
+        <span class="skill-num">05</span>
+        <div class="skill-meta">
+          <div class="skill-name">Cross-sell por Co-compra</div>
+          <div class="skill-cmd">/cross-sell-recommender</div>
+          <div class="skill-desc">Identifica os melhores cross-sells por produto com base em co-ocorrência real nos pedidos. Pronto para colar na PDP.</div>
+        </div>
+      </div>
+      <div class="prompt-block">
+        <span class="prompt-label">Prompt</span>
+        <span><span class="prompt-slash">/cross-sell-recommender</span></span>
+      </div>
+      <div class="output-block"><span class="c-header">===== CROSS-SELL POR CO-COMPRA =====</span>
+
+<span class="c-muted">Pedidos analisados: 43 | Com 2+ produtos: 1</span>
+<span class="c-muted">Pares de co-compra encontrados: 1</span>
+
+<span class="c-header">Produto Âncora                        Cross-sell                             Co-compra</span>
+<span class="c-divider">------------------------------------------------------------------------------------------</span>
+Camiseta D2C (Branco, G)              Remera Superman                            12.5%
+
+Remera Superman                       Camiseta D2C (Branco, G)                  100.0%
+
+<span class="c-yellow">Dados insuficientes para recomendações confiáveis.</span>
+<span class="c-muted">Esta análise requer 50+ pedidos com 2+ itens para ser estatisticamente válida.</span>
+<span class="c-muted">Continue usando a loja e rode novamente quando tiver mais pedidos.</span></div>
+      <div class="data-note">⬡ <strong>Loja de teste com volume baixo</strong> — skill funciona, mas precisa de mais dados. Em lojas reais gera dezenas de pares com % confiáveis</div>
+      <div class="next-steps">
+        <div class="next-steps-label">Próximos passos sugeridos pela skill</div>
+        <div class="next-steps-list">
+          <span class="pill primary">Rodar novamente com mais pedidos acumulados</span>
+          <span class="pill">Configurar "Compre junto" na PDP</span>
+        </div>
+      </div>
+    </div>
+
+    <!-- 6. ABANDONMENT -->
+    <div class="skill-card" id="abandonment">
+      <div class="skill-header">
+        <span class="skill-num">06</span>
+        <div class="skill-meta">
+          <div class="skill-name">Análise de Abandono e Cancelamento</div>
+          <div class="skill-cmd">/abandonment-analysis</div>
+          <div class="skill-desc">Analisa taxa de abandono, motivos de cancelamento e quais produtos concentram as perdas.</div>
+        </div>
+      </div>
+      <div class="prompt-block">
+        <span class="prompt-label">Prompt</span>
+        <span><span class="prompt-slash">/abandonment-analysis</span> <span class="prompt-args">dias=30</span></span>
+      </div>
+      <div class="output-block"><span class="c-header">===== ANÁLISE DE ABANDONO E CANCELAMENTO =====</span>
+
+<span class="c-muted">  Abandonados: 0 | Cancelados: 33 | Pagos: 43 | Pendentes: 29</span>
+
+<span class="c-header">Status do Funil (histórico completo)</span>
+<span class="c-divider">--------------------------------------------------</span>
+  Pagos:              43      41.0%
+<span class="c-orange">  Abandonados:         0       0.0%</span>
+<span class="c-red">  Cancelados:         33      31.4%</span>
+  Pendentes:          29      27.6%
+  TOTAL:             105
+
+<span class="c-header">Motivos de Cancelamento</span>
+<span class="c-divider">----------------------------------------</span>
+<span class="c-orange">  refund                            23    69.7%</span>
+  customer                           9    27.3%
+  other                              1     3.0%
+
+<span class="c-header">Top Produtos em Pedidos Perdidos (cancelados)</span>
+<span class="c-divider">------------------------------------------------------------</span>
+<span class="c-red">  Camiseta Harlem (Branco, G)                   15 pedidos perdidos</span>
+<span class="c-orange">  Camiseta essential cinza chumbo                13 pedidos perdidos</span>
+  Camiseta D2C (Branco, G)                       1 pedidos perdidos
+  Short sustentável em linho ECO Preto            1 pedidos perdidos
+  Camiseta essential marrom                       1 pedidos perdidos
+  Top Faixa dupla face Mostarda                   1 pedidos perdidos</div>
+      <div class="data-note">⬡ <strong>Dados reais</strong> — 69.7% dos cancelamentos são por "refund" (reembolso solicitado). Camiseta Harlem tem 15 pedidos cancelados — padrão real detectado pela skill</div>
+      <div class="next-steps">
+        <div class="next-steps-label">Próximos passos sugeridos pela skill</div>
+        <div class="next-steps-list">
+          <span class="pill primary">Investigar por que Camiseta Harlem tem 15 cancelamentos</span>
+          <span class="pill">E-mail recuperação para pendentes</span>
+          <span class="pill">/stockout-predictor</span>
+        </div>
+      </div>
+    </div>
+
+    <!-- 7. COHORT -->
+    <div class="skill-card" id="cohort">
+      <div class="skill-header">
+        <span class="skill-num">07</span>
+        <div class="skill-meta">
+          <div class="skill-name">Análise de Cohort de Retenção</div>
+          <div class="skill-cmd">/cohort-retention</div>
+          <div class="skill-desc">Mostra qual % dos clientes de cada mês voltou a comprar nos meses seguintes. Revela se a retenção está melhorando ou piorando.</div>
+        </div>
+      </div>
+      <div class="prompt-block">
+        <span class="prompt-label">Prompt</span>
+        <span><span class="prompt-slash">/cohort-retention</span></span>
+      </div>
+      <div class="output-block"><span class="c-header">===== COHORT DE RETENÇÃO =====</span>
+
+<span class="c-muted">Pedidos analisados: 43 | Clientes únicos: 12</span>
+<span class="c-muted">Clientes com 2+ compras: 8 (66.7%)</span>
+
+<span class="c-header">Cohort        Clientes      M+1      M+2      M+3      M+6</span>
+<span class="c-divider">---------------------------------------------------------</span>
+2025-09             11   <span class="c-orange">18.2%</span>     0.0%     0.0%     0.0%
+2025-10              1    0.0%       —        —        —
+
+<span class="c-muted">Nota: % de clientes do cohort que voltaram a comprar em cada mês seguinte.</span></div>
+      <div class="data-note">⬡ <strong>Loja de teste</strong> — apenas 2 meses de dados. Em lojas reais a tabela tem 6–12 meses e mostra tendências de retenção claras</div>
+      <div class="next-steps">
+        <div class="next-steps-label">Próximos passos sugeridos pela skill</div>
+        <div class="next-steps-list">
+          <span class="pill primary">Meta: M+1 ≥ 25% para e-commerce de moda</span>
+          <span class="pill">Campanha reativação M+30</span>
+          <span class="pill">/rfm-segmentation</span>
+        </div>
+      </div>
+    </div>
+
+    <!-- 8. PRICE MARGIN -->
+    <div class="skill-card" id="margin">
+      <div class="skill-header">
+        <span class="skill-num">08</span>
+        <div class="skill-meta">
+          <div class="skill-name">Análise de Preço + Margem</div>
+          <div class="skill-cmd">/price-margin-analysis</div>
+          <div class="skill-desc">Detecta produtos com desconto alto e margem baixa simultaneamente — desconto empilhado comendo lucro sem crescer volume.</div>
+        </div>
+      </div>
+      <div class="prompt-block">
+        <span class="prompt-label">Prompt</span>
+        <span><span class="prompt-slash">/price-margin-analysis</span> <span class="prompt-args">desconto_min=20 margem_max=30</span></span>
+      </div>
+      <div class="output-block"><span class="c-header">===== ANÁLISE DE PREÇO + MARGEM =====</span>
+<span class="c-muted">Filtro: desconto ≥ 20% E margem ≤ 30%</span>
+
+<span class="c-muted">Produtos encontrados: 209</span>
+<span class="c-yellow">Variants sem custo preenchido: 910</span>
+
+Nenhum produto encontrado com esse critério.
+
+<span class="c-muted">Motivo: 910 variants não têm o campo "custo" cadastrado na Nuvemshop.</span>
+<span class="c-muted">A skill ignora variants sem custo para evitar análise imprecisa.</span>
+
+<span class="c-accent">→ Para usar esta skill: cadastre o custo de cada produto em</span>
+<span class="c-accent">  Admin → Produtos → [produto] → Variantes → Custo</span>
+<span class="c-accent">→ Com o custo preenchido, a skill detecta automaticamente os</span>
+<span class="c-accent">  produtos onde desconto + margem estão em zona de risco</span></div>
+      <div class="data-note">⬡ <strong>Comportamento real</strong> — a skill detectou que 910 variants não têm custo cadastrado e avisou claramente, sem quebrar</div>
+      <div class="next-steps">
+        <div class="next-steps-label">Próximos passos sugeridos pela skill</div>
+        <div class="next-steps-list">
+          <span class="pill primary">Cadastrar custo nos produtos via admin</span>
+          <span class="pill">Rodar novamente após preenchimento</span>
+          <span class="pill">/shipping-optimizer</span>
+        </div>
+      </div>
+    </div>
+
+    <!-- 9. SEO -->
+    <div class="skill-card" id="seo">
+      <div class="skill-header">
+        <span class="skill-num">09</span>
+        <div class="skill-meta">
+          <div class="skill-name">Gerador de SEO Local</div>
+          <div class="skill-cmd">/seo-meta-generator</div>
+          <div class="skill-desc">Gera seo_title (≤70 chars) e seo_description (≤320 chars) para os N produtos mais vendidos e aplica via API após confirmação.</div>
+        </div>
+      </div>
+      <div class="prompt-block">
+        <span class="prompt-label">Prompt</span>
+        <span><span class="prompt-slash">/seo-meta-generator</span> <span class="prompt-args">quantidade=50 idioma=pt-BR</span></span>
+      </div>
+      <div class="output-block"><span class="c-header">===== GERADOR DE SEO LOCAL (preview) =====</span>
+
+<span class="c-muted">10 produtos mais vendidos encontrados</span>
+
+<span class="c-header">Produto                                  seo_title atual                seo_desc atual</span>
+<span class="c-divider">----------------------------------------------------------------------------------------------------</span>
+Maiô Body Regata recorte tela Cinza Ch   Maiô Body Regata com Recorte   Maiô Body Regata cinza chumbo com r
+Maiô Body Regata recorte tela Off Whit   Maiô Body Regata Off White c   Maiô regata off white com recorte e
+<span class="c-yellow">Maiô Body Regata recorte tela Marrom     (vazio)                        (vazio)</span>
+Maiô Body Regata recorte tela Preto      "Maiô Regata Versátil com Re   Descubra o Maiô Regata com Recorte
+<span class="c-yellow">Conjunto: Top Meia Taça + Calcinha Asa   (vazio)                        (vazio)</span>
+<span class="c-yellow">Conjunto: Top Meia Taça + Calcinha Asa   (vazio)                        (vazio)</span>
+<span class="c-yellow">Conjunto: Top Meia Taça + Calcinha Asa   (vazio)                        (vazio)</span>
+<span class="c-yellow">Conjunto: Top Meia Taça + Calcinha Asa   (vazio)                        (vazio)</span>
+
+Com seo_title preenchido: <span class="c-green">4/10</span>
+<span class="c-yellow">Sem seo_title (a gerar):  6/10</span>
+
+<span class="c-accent">→ Claude gera seo_title (≤70 chars) e seo_description (≤320 chars) para cada um</span>
+<span class="c-accent">→ Preview exibido antes de qualquer alteração na loja</span>
+<span class="c-accent">→ Confirme "s" para aplicar via PUT /products/{id}</span></div>
+      <div class="data-note">⬡ <strong>Dados reais</strong> — detectou 6 de 10 produtos top sem SEO preenchido. Produtos e categorias são da loja real (moda praia/fitness)</div>
+      <div class="next-steps">
+        <div class="next-steps-label">Próximos passos sugeridos pela skill</div>
+        <div class="next-steps-list">
+          <span class="pill primary">Confirmar geração para os 6 sem SEO</span>
+          <span class="pill">Expandir para 50 produtos</span>
+          <span class="pill">/product-description-rewriter</span>
+        </div>
+      </div>
+    </div>
+
+    <!-- 10. DESCRIPTION REWRITER -->
+    <div class="skill-card" id="rewriter">
+      <div class="skill-header">
+        <span class="skill-num">10</span>
+        <div class="skill-meta">
+          <div class="skill-name">Reescritor de Descrições</div>
+          <div class="skill-cmd">/product-description-rewriter</div>
+          <div class="skill-desc">Reescreve descrições de uma categoria inteira com a voz da sua marca. Aplica via API após preview e confirmação.</div>
+        </div>
+      </div>
+      <div class="prompt-block">
+        <span class="prompt-label">Prompt</span>
+        <span><span class="prompt-slash">/product-description-rewriter</span> <span class="prompt-args">categoria="Maiôs / Bodies" palavras=100</span></span>
+      </div>
+      <div class="output-block"><span class="c-header">===== REESCRITOR DE DESCRIÇÕES =====</span>
+
+<span class="c-muted">Categorias disponíveis (44 encontradas):</span>
+
+<span class="c-header">        ID  Categoria</span>
+<span class="c-divider">-------------------------------------------------------</span>
+  31206946  Maiôs / Bodies
+  31206958  Regata com tela
+  31206971  Manga longa
+  31206960  Biquinis
+  31206961  Conjuntos
+  31206962  Meia taça + Asa delta
+  31206972  Surf reguladores + Surf tirinha
+  31206979  Cortininha + Lacinho
+  31207142  Camisetinha sport + Largo sport
+  31207148  Fixo confy + Basic duo
+           ... +34 categorias
+
+<span class="c-muted">Produtos da categoria 'Maiôs / Bodies' (amostra):</span>
+
+  • Maiô Body Regata recorte tela Cinza Chumbo
+    Desc atual: <span class="c-muted">"Vocês já conhecem o nosso mais novo queridinho? Apresentamos o Maiô Regata com Re..."</span>
+
+  • Maiô Body Regata recorte tela Off White
+    Desc atual: <span class="c-muted">"Vocês já conhecem o nosso mais novo queridinho? Apresentamos o Maiô Regata com Re..."</span>
+
+  • Maiô Body Regata recorte tela Marrom
+    Desc atual: <span class="c-muted">"Vocês já conhecem o nosso mais novo queridinho? Apresentamos o Maiô Regata com Re..."</span>
+
+<span class="c-accent">→ Escolha categoria + voz da marca → Claude reescreve + preview → confirme → PUT</span></div>
+      <div class="data-note">⬡ <strong>Dados reais</strong> — 44 categorias reais da loja. Descrições atuais são idênticas entre produtos — exatamente o caso que a skill resolve</div>
+      <div class="next-steps">
+        <div class="next-steps-label">Próximos passos sugeridos pela skill</div>
+        <div class="next-steps-list">
+          <span class="pill primary">Reescrever "Maiôs / Bodies" (categoria com mais produtos)</span>
+          <span class="pill">Definir voz da marca antes</span>
+          <span class="pill">/seo-meta-generator</span>
+        </div>
+      </div>
+    </div>
+
+    <!-- 11. BULK PRICE UPDATER -->
+    <div class="skill-card" id="bulkprice">
+      <div class="skill-header">
+        <span class="skill-num">11</span>
+        <div class="skill-meta">
+          <div class="skill-name">Atualizador de Preços e Custos em Massa</div>
+          <div class="skill-cmd">/bulk-price-updater</div>
+          <div class="skill-desc">Resolve o maior pain point de catálogos grandes — o campo de custo enterrado em cada variante. Atualiza preços e custos com proporção percentual (ex: +15% para inflação) via API após confirmação.</div>
+        </div>
+      </div>
+      <div class="prompt-block">
+        <span class="prompt-label">Prompt</span>
+        <span><span class="prompt-slash">/bulk-price-updater</span> <span class="prompt-args">ajuste_pct=15 campo=ambos</span></span>
+      </div>
+      <div class="output-block"><span class="c-header">===== PREVIEW DE AJUSTE — +15% em AMBOS =====</span>
+
+<span class="c-header">Produto                                             Preço    →     Novo   Custo   →   Novo  Markup</span>
+<span class="c-divider">------------------------------------------------------------------------------------------------------</span>
+Maiô Body Regata recorte tela Cinza Ch — cinza     293.00   →   336.95    0.00   →   0.00       —
+Maiô Body Regata recorte tela Cinza Ch — cinza     289.00   →   332.35    0.00   →   0.00       —
+Maiô Body Regata recorte tela Off Whit — Off Whi   293.00   →   336.95    0.00   →   0.00       —
+Maiô Body Regata recorte tela Off Whit — Off Whi   289.00   →   332.35    0.00   →   0.00       —
+Conjunto: Top Meia Taça + Calcinha — Cinza Chum    189.90   →   218.39    0.00   →   0.00       —
+Conjunto: Top Meia Taça + Calcinha — Off White     189.90   →   218.39    0.00   →   0.00       —
+... e mais 920 variantes
+
+Total de variantes a atualizar: <span class="c-yellow">926</span>
+Variantes sem custo cadastrado:  <span class="c-orange">910</span>
+
+<span class="c-muted">→ Preencha o campo custo para calcular markup e margem</span>
+<span class="c-accent">→ Confirme para aplicar via PUT /products/{id} em batch</span></div>
+      <div class="data-note">⬡ <strong>Dados reais</strong> — 926 variantes detectadas, 910 sem custo preenchido. Com custo preenchido, o ajuste proporcional aplica via PUT em batch com uma única confirmação</div>
+      <div class="next-steps">
+        <div class="next-steps-label">Próximos passos sugeridos pela skill</div>
+        <div class="next-steps-list">
+          <span class="pill primary">Preencher custos + rodar /price-margin-analysis</span>
+          <span class="pill">Filtrar por categoria específica</span>
+          <span class="pill">Ajuste assimétrico (preço +15%, custo +12%)</span>
+        </div>
+      </div>
+    </div>
+
+    <!-- 12. CATALOG HEALTH -->
+    <div class="skill-card" id="cataloghealth">
+      <div class="skill-header">
+        <span class="skill-num">12</span>
+        <div class="skill-meta">
+          <div class="skill-name">Diagnóstico de Saúde do Catálogo</div>
+          <div class="skill-cmd">/catalog-health</div>
+          <div class="skill-desc">Varredura completa do catálogo: produtos sem foto, sem descrição, sem SEO, e variantes publicadas com estoque zerado. Gera lista de ações prioritárias com ordem de impacto.</div>
+        </div>
+      </div>
+      <div class="prompt-block">
+        <span class="prompt-label">Prompt</span>
+        <span><span class="prompt-slash">/catalog-health</span></span>
+      </div>
+      <div class="output-block"><span class="c-header">===== DIAGNÓSTICO DE SAÚDE DO CATÁLOGO =====</span>
+<span class="c-muted">Produtos publicados analisados: 209</span>
+
+<span class="c-red">🔴 Variantes publicadas com estoque 0: 182</span>
+    • Conjunto: Top Meia Taça + Calcinha — Com bojo
+    • Calcinha Asa Delta Marrom — Marrom
+    • Top Surf Reguladores Cinza chumbo — Com bojo
+    ... e mais 179
+
+<span class="c-red">🔴 Produtos sem nenhuma imagem: 205</span>
+    • Maiô Body Regata recorte tela Cinza Chumbo
+    • Maiô Body Regata recorte tela Marrom
+    ... e mais 203
+
+<span class="c-yellow">🟡 Produtos sem descrição (&lt; 30 chars): 36</span>
+<span class="c-yellow">🟡 Produtos sem seo_title: 164</span>
+<span class="c-yellow">🟡 Produtos sem seo_description: 164</span>
+<span class="c-muted">⚪ Produtos com variante sem custo: 207</span>
+
+<span class="c-header">--- Ordem de Prioridade ---</span>
+<span class="c-red">1. ⚡ 205 produto(s) sem foto — não convertem</span>
+<span class="c-red">2. ⚡ 182 variante(s) com estoque 0 publicadas — esconder ou repor</span>
+<span class="c-yellow">3. 📈 164 produto(s) sem seo_title — rode /seo-meta-generator</span>
+<span class="c-yellow">4. ✍  36 produto(s) sem descrição — rode /product-description-rewriter</span>
+<span class="c-muted">5. 💰 207 produto(s) sem custo — preencha para usar /price-margin-analysis</span></div>
+      <div class="data-note">⬡ <strong>Dados reais</strong> — 958 problemas detectados nesta loja de teste. Em produção roda semanalmente como checklist operacional antes de abrir o admin</div>
+      <div class="next-steps">
+        <div class="next-steps-label">Próximos passos sugeridos pela skill</div>
+        <div class="next-steps-list">
+          <span class="pill primary">Esconder variantes com estoque 0</span>
+          <span class="pill">/seo-meta-generator para 164 produtos</span>
+          <span class="pill">Rodar toda segunda-feira</span>
+        </div>
+      </div>
+    </div>
+
+    <!-- 13. DAILY DIGEST -->
+    <div class="skill-card" id="digest">
+      <div class="skill-header">
+        <span class="skill-num">13</span>
+        <div class="skill-meta">
+          <div class="skill-name">Daily Digest — Briefing Executivo</div>
+          <div class="skill-cmd">/daily-digest</div>
+          <div class="skill-desc">Briefing completo da loja em 30 segundos — GMV da semana vs semana anterior, top produtos, pagamentos pendentes, cancelamentos e estoque crítico. Roda toda manhã antes de abrir o admin.</div>
+        </div>
+      </div>
+      <div class="prompt-block">
+        <span class="prompt-label">Prompt</span>
+        <span><span class="prompt-slash">/daily-digest</span></span>
+      </div>
+      <div class="output-block"><span class="c-dim">=======================================================</span>
+<span class="c-header">  DAILY DIGEST — 14/05/2026</span>
+<span class="c-dim">=======================================================</span>
+
+<span class="c-header">📊 GMV (últimos 7 dias)</span>
+   R$ 0.00  ▼ -100.0% vs 7 dias anteriores
+   <span class="c-muted">(0 pedidos | período anterior: R$ 377.01, 43 pedidos)</span>
+
+<span class="c-header">🏆 TOP PRODUTOS</span>
+   Camiseta Harlem (Branco, G)                    21 un.
+   Camiseta D2C (Branco, G)                        8 un.
+   Camiseta essential cinza chumbo (G, cinza)      8 un.
+   Kimono em linho ECO Azul Royal                  6 un.
+   Remera Superman                                 1 un.
+
+<span class="c-orange">⏳ PAGAMENTOS PENDENTES</span>
+   29 pedidos aguardando — R$ 1,834.78 em risco
+
+<span class="c-red">❌ CANCELAMENTOS (histórico)</span>
+   33 cancelamentos | Principal: reembolso (23x)
+   Receita perdida: R$ 2,221.10
+
+<span class="c-red">⚠️  ESTOQUE CRÍTICO (≤ 5 unidades)</span>
+   🔴 Conjunto: Top Meia Taça + Calcinha — Com bojo    ZERADO
+   🔴 Calcinha Asa Delta Marrom                        ZERADO
+   🔴 Top Surf Reguladores Cinza chumbo — Com bojo     ZERADO
+   <span class="c-muted">... e mais 179 SKUs zerados</span>
+
+<span class="c-accent">💡 AÇÕES RECOMENDADAS HOJE</span>
+<span class="c-accent">   1. 182 SKU(s) com estoque zerado — repor ou despublicar</span>
+<span class="c-accent">   2. 29 pedidos pendentes (R$ 1,834.78) — ative recuperação WhatsApp</span>
+<span class="c-accent">   3. Taxa de cancelamento alta (33/76) — rode /abandonment-analysis</span>
+
+<span class="c-dim">=======================================================</span></div>
+      <div class="data-note">⬡ <strong>Dados reais</strong> — briefing gerado via API em ~8 segundos. Loja de teste sem vendas recentes; em lojas ativas mostra delta de GMV semana a semana e top produtos do período</div>
+      <div class="next-steps">
+        <div class="next-steps-label">Próximos passos sugeridos pela skill</div>
+        <div class="next-steps-list">
+          <span class="pill primary">Rodar toda manhã antes de abrir o admin</span>
+          <span class="pill">/abandonment-analysis para investigar cancelamentos</span>
+          <span class="pill">/catalog-health para resolver estoque zerado</span>
+        </div>
+      </div>
+    </div>
+
+  </main>
+</div>
+
+<script>
+  const sections = document.querySelectorAll('.skill-card');
+  const navItems = document.querySelectorAll('.nav-item');
+  const observer = new IntersectionObserver((entries) => {
+    entries.forEach(entry => {
+      if (entry.isIntersecting) {
+        navItems.forEach(n => n.classList.remove('active'));
+        const active = document.querySelector(`.nav-item[href="#${entry.target.id}"]`);
+        if (active) active.classList.add('active');
+      }
+    });
+  }, { rootMargin: '-20% 0px -70% 0px' });
+  sections.forEach(s => observer.observe(s));
+</script>
+</body>
+</html>
