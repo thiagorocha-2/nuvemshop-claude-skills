@@ -1,4 +1,4 @@
-# Post LinkedIn — Top 10 Claude Skills para Nuvemshop
+# Post LinkedIn — 13 Claude Skills para Nuvemshop
 
 ---
 
@@ -6,134 +6,126 @@
 
 ---
 
-Top 10 Claude skills para Nuvemshop
+Top 13 Claude skills para Nuvemshop
 
-Setup é 2 minutos 👇
+Setup é 5 minutos 👇
 
-1/ Análise de Abandono e Cancelamento
-Puxa 30 dias de pedidos. Agrupa por motivo de cancelamento e produtos perdidos.
-Você descobre onde o funil quebra — e por quê.
+1/ Daily Digest
+Briefing completo antes de abrir o admin. GMV da semana vs semana passada, pendentes, estoque crítico. Numa chamada.
 
-2/ Reescritor de Descrições
-"Reescreva os produtos da categoria X, 100 palavras, voz da marca."
-60 SKUs. Um prompt. Aplicado direto via API.
+2/ Diagnóstico de Catálogo
+Varre todos os produtos publicados procurando o que quebra conversão.
+"958 problemas: 205 sem foto, 182 variantes com estoque 0 publicadas."
 
-3/ Analisador PIX vs Parcelamento
-"Compare ticket médio e volume por meio de pagamento nos últimos 90 dias."
-PIX, boleto, cartão 1x, parcelado 4-6x — separados. Skill que não existe no Shopify.
+3/ Previsão de Ruptura
+"Camiseta Preta M: 8,7 dias de estoque restantes."
+Calcula velocity de vendas por SKU. Antes de zerar — não depois.
 
-4/ Previsão de Ruptura de Estoque
-Calcula velocity de vendas por SKU nos últimos 30 dias.
-"Fone Bluetooth Branco: 4,3 dias de estoque restantes."
-Antes de zerar, não depois.
-
-5/ Segmentação RFM para WhatsApp
+4/ Segmentação RFM
 "Classifique minha base em Campeões, Em Risco e Dormentes."
-Exporta CSV com nome, email e telefone — pronto pra importar no WhatsApp Business ou RD Station.
+Exporta CSV com telefone pronto pro WhatsApp Business. Um query.
 
-6/ Analisador de Cohort de Retenção
-"Qual % dos clientes de Janeiro voltou a comprar em Fevereiro?"
-Tabela de retenção por safra. Mostra se sua retenção está melhorando ou piorando.
+5/ Abandono e Cancelamento
+Pull de 90 dias. Agrupa por motivo e produto afetado.
+"Camiseta Harlem: 15 cancelamentos. Não escale."
 
-7/ Cross-sell por Co-compra
-"Para os 20 produtos mais vendidos, sugira 3 cross-sells baseados em dados reais."
-Quem comprou A também comprou B em 26% dos pedidos.
-Pronto pra colar na PDP.
+6/ Cross-sell por Co-compra
+"Para os 20 produtos top, sugira 3 cross-sells por co-compra real."
+Prontos pra colar na PDP.
 
-8/ Análise de Preço + Margem
+7/ Cohort de Retenção
+"Pull de retenção por mês de primeira compra."
+Mostra se sua retenção está melhorando ou piorando safra a safra.
+
+8/ PIX vs Parcelamento
+"Compare ticket médio por meio de pagamento nos últimos 90 dias."
+PIX, boleto, cartão 1x, 4-6x — separados. Não existe no Shopify.
+
+9/ Frete Grátis
+"Qual threshold de frete grátis maximiza ticket sem destruir margem?"
+"R$ 150 captura 64% dos pedidos e sobe o ticket em R$ 51."
+
+10/ SEO Local
+"Gere meta titles e descriptions para os 50 mais vendidos, em PT-BR."
+seo_title ≤70 chars. Aplica via API após confirmação.
+
+11/ Reescritor de Descrições
+"Reescreva os produtos da categoria X, 100 palavras, voz da marca."
+60 SKUs, um prompt.
+
+12/ Análise de Margem
 "Produtos com desconto 20%+ onde margem está abaixo de 30%."
 Pega desconto empilhado comendo lucro sem crescer volume.
 
-9/ Gerador de SEO Local
-"Gere meta titles e descriptions para os 50 produtos mais vendidos, em PT-BR."
-seo_title ≤70 chars. seo_description ≤320 chars. Aplicado via API.
+13/ Preços em Massa
+O campo de custo fica dentro de cada variante — impossível atualizar a mão em catálogos grandes.
++15% em 926 variantes. Uma confirmação.
 
-10/ Otimizador de Frete Grátis
-"Qual threshold de frete grátis maximiza ticket médio sem destruir margem?"
-"R$ 150 capturaria 64% dos pedidos e aumentaria seu ticket médio em R$ 51."
-Frete grátis é o maior driver de conversão no Brasil. Esta skill calcula o número certo.
+Setup: conecte sua loja ao Claude via API da Nuvemshop. Projeto pessoal, não oficial.
 
----
-
-Setup: conecte sua loja ao Claude Code em 1 clique com a API da Nuvemshop.
-A skill de Previsão de Ruptura roda primeiro.
-
-Comente "nuvem" e mando o setup + as 10 skills.
+Comente "nuvem" que mando o setup + as 13 skills.
 
 ---
 
-## Versão ES (para Argentina/México)
+## Versão ES (Argentina / México)
 
 ---
 
-Top 10 Claude skills para Tiendanube
+Top 13 Claude skills para Tiendanube
 
-Setup en 2 minutos 👇
+Setup en 5 minutos 👇
 
-1/ Análisis de Abandono y Cancelaciones
-Trae 30 días de pedidos. Agrupa por motivo de cancelación y productos perdidos.
-Sabés exactamente dónde se rompe el funnel.
+1/ Daily Digest
+Briefing completo antes de abrir el admin. GMV de la semana vs semana pasada, pendientes, stock crítico. En una llamada.
 
-2/ Reescritor de Descripciones
-"Reescribí los productos de la categoría X, 100 palabras, voz de marca."
-60 SKUs. Un prompt. Aplicado directo por API.
+2/ Diagnóstico de Catálogo
+Escanea todos los productos publicados buscando lo que rompe la conversión.
+"958 problemas: 205 sin foto, 182 variantes con stock 0 publicadas."
 
-3/ Analizador de Medios de Pago
-"Compará ticket promedio y volumen por medio de pago de los últimos 90 días."
-Transferencia, tarjeta 1 cuota, tarjeta 6 cuotas — separados. Skill que no existe en Shopify.
-
-4/ Predictor de Quiebre de Stock
-Calcula la velocidad de ventas por SKU en los últimos 30 días.
+3/ Predictor de Quiebre de Stock
 "Auricular Bluetooth Blanco: 4,3 días de stock restantes."
-Antes de quedarte sin stock, no después.
+Calcula velocidad de ventas por SKU. Antes de quebrarte — no después.
 
-5/ Segmentación RFM para WhatsApp
+4/ Segmentación RFM
 "Clasificá mi base en Campeones, En Riesgo y Dormidos."
-Exporta CSV listo para importar en WhatsApp Business o cualquier CRM.
+Exporta CSV con teléfono listo para WhatsApp Business. Una query.
 
-6/ Analizador de Cohortes de Retención
-"¿Qué % de los clientes de Enero volvió a comprar en Febrero?"
-Tabla de retención por cohorte. Muestra si tu retención mejora o empeora.
+5/ Abandono y Cancelaciones
+Pull de 90 días. Agrupa por motivo y producto afectado.
+"Remera Harlem: 15 cancelaciones. No escales."
 
-7/ Recomendador de Cross-sell
-"Para los 20 productos más vendidos, sugerí 3 cross-sells basados en datos reales."
-Quien compró A también compró B en el 26% de los pedidos.
-Listo para pegar en la PDP.
+6/ Cross-sell por Co-compra
+"Para los 20 productos top, sugerí 3 cross-sells por co-compra real."
+Listos para pegar en la PDP.
 
-8/ Análisis de Precio + Margen
+7/ Cohortes de Retención
+"Pull de retención por mes de primera compra."
+Muestra si tu retención mejora o empeora cohorte a cohorte.
+
+8/ Medios de Pago
+"Comparar ticket promedio por medio de pago de los últimos 90 días."
+Transferencia, tarjeta 1 cuota, 6 cuotas — separados.
+
+9/ Envío Gratis
+"¿Qué umbral de envío gratis maximiza el ticket sin destruir el margen?"
+"$ 8.000 captura el 64% de los pedidos y sube el ticket en $ 1.800."
+
+10/ SEO Local
+"Generá meta titles y descriptions para los 50 más vendidos, en español."
+seo_title ≤70 chars. Aplica por API tras confirmación.
+
+11/ Reescritor de Descripciones
+"Reescribí los productos de la categoría X, 100 palabras, voz de marca."
+60 SKUs, un prompt.
+
+12/ Análisis de Margen
 "Productos con descuento 20%+ donde el margen está por debajo del 30%."
 Detecta descuentos apilados comiendo ganancia sin crecer volumen.
 
-9/ Generador de SEO Local
-"Generá meta titles y descriptions para los 50 productos más vendidos, en español."
-seo_title ≤70 chars. seo_description ≤320 chars. Aplicado por API.
+13/ Precios Masivos
+El campo de costo está dentro de cada variante — imposible actualizarlo a mano en catálogos grandes.
++15% en 926 variantes. Una confirmación.
 
-10/ Optimizador de Envío Gratis
-"¿Qué umbral de envío gratis maximiza el ticket promedio sin destruir margen?"
-"$ 8.000 capturaría el 64% de los pedidos y subiría tu ticket en $ 1.800."
-El envío gratis es el mayor driver de conversión en LatAm. Esta skill calcula el número exacto.
+Setup: conectá tu tienda a Claude por API de Tiendanube. Proyecto personal, no oficial.
 
----
-
-Setup: conectá tu tienda a Claude Code en 1 clic con la API de Tiendanube.
-El Predictor de Stock corre primero.
-
-Comentá "tienda" y te mando el setup + las 10 skills.
-
----
-
-## Notas para o autor (Thiago)
-
-**Ângulos de diferenciação para destacar no post:**
-- Skills 3 (PIX/parcelamento), 5 (RFM+WhatsApp) e 10 (frete grátis) não têm equivalente no ecossistema Shopify — mencionar isso explicitamente
-- Todas as skills usam dados reais da loja via API Nuvemshop (não são genéricas)
-- Setup: merchant precisa configurar `NUVEMSHOP_STORE_ID` e `NUVEMSHOP_TOKEN` uma vez
-
-**Para o CTA:**
-- Link do repo: https://github.com/thiagorocha-2/nuvemshop-claude-skills
-- Projeto pessoal — deixar claro que não é produto oficial da Nuvemshop
-
-**Tom check (Bridge Framework):**
-- Before: merchant no escuro sobre o próprio negócio — estoque zerando sem perceber, frete grátis mal calibrado, base de clientes dormindo
-- Bridge: Claude + API Nuvemshop = análises que antes levavam dias, em 2 minutos
-- After: decisões baseadas em dados reais da loja, não intuição
+Comentá "tienda" y te mando el setup + las 13 skills.
