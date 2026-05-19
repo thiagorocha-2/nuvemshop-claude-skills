@@ -120,7 +120,7 @@ seo_title ≤70 chars. Aplica por API tras confirmación.
 
 12/ Análisis de Margen
 "Productos con descuento 20%+ donde el margen está por debajo del 30%."
-Detecta descuentos apilados comiendo ganancia sin crecer volumen.
+Detecta descuentos apilados comiendo ganancia sin aumentar el volumen.
 
 13/ Precios Masivos
 El campo de costo está dentro de cada variante — imposible actualizarlo a mano en catálogos grandes.
