@@ -314,6 +314,80 @@
   .next-steps-list { display: flex; flex-wrap: wrap; gap: 6px; }
   .pill { font-size: 11.5px; padding: 4px 12px; border-radius: 100px; border: 1px solid var(--border); color: var(--muted); background: var(--surface2); font-weight: 600; }
   .pill.primary { border-color: rgba(0,80,195,0.4); color: var(--accent2); background: rgba(0,80,195,0.12); }
+
+  /* ── Mobile nav button ── */
+  .menu-btn {
+    display: none;
+    margin-left: auto;
+    background: transparent;
+    border: 1px solid var(--border);
+    border-radius: 8px;
+    padding: 7px 9px;
+    cursor: pointer;
+    color: var(--text);
+    line-height: 0;
+    flex-shrink: 0;
+  }
+
+  /* ── Nav drawer overlay ── */
+  .nav-overlay {
+    display: none;
+    position: fixed;
+    inset: 0;
+    background: rgba(0, 11, 35, 0.72);
+    z-index: 150;
+    backdrop-filter: blur(2px);
+  }
+  .nav-overlay.visible { display: block; }
+
+  /* ── Mobile ── */
+  @media (max-width: 768px) {
+    header { padding: 12px 16px; gap: 12px; }
+    .subtitle { display: none; }
+    .menu-btn { display: flex; }
+
+    .container { display: block; }
+
+    nav {
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 240px;
+      height: 100vh;
+      z-index: 200;
+      transform: translateX(-100%);
+      transition: transform 0.3s cubic-bezier(0.19, 1, 0.22, 1);
+      background: var(--surface);
+    }
+    nav.open {
+      transform: translateX(0);
+      box-shadow: 4px 0 32px rgba(0,0,0,0.6);
+    }
+
+    main { padding: 24px 16px; max-width: 100%; }
+
+    .hero { margin-bottom: 28px; }
+    .hero h1 { font-size: 20px; }
+    .hero p { font-size: 13px; }
+
+    .notice { font-size: 12.5px; padding: 10px 14px; }
+
+    .setup-header { padding: 18px 18px 14px; }
+    .setup-steps { padding: 18px 18px; gap: 18px; }
+    .step-code { font-size: 11px; padding: 10px 12px; }
+
+    .skill-header { padding: 14px 16px 12px; flex-wrap: wrap; gap: 10px; }
+    .latam-badge { order: 10; }
+    .skill-cmd { font-size: 11px; }
+    .skill-desc { font-size: 12.5px; }
+
+    .prompt-block { padding: 10px 14px; font-size: 11.5px; flex-wrap: wrap; gap: 6px; overflow-x: auto; }
+    .output-block { padding: 14px 16px; font-size: 11px; }
+    .data-note { padding: 10px 16px; }
+    .next-steps { padding: 10px 16px; }
+    .next-steps-list { gap: 5px; }
+    .pill { font-size: 11px; padding: 4px 10px; }
+  }
 </style>
 </head>
 <body>
@@ -324,6 +398,13 @@
     <span class="logo-badge">13 skills</span>
   </div>
   <span class="subtitle" data-pt="Outputs reais — testado via API em loja real" data-es="Outputs reales — probado vía API en tienda real">Outputs reais — testado via API em loja real</span>
+  <button class="menu-btn" onclick="toggleNav()" aria-label="Menu">
+    <svg width="18" height="14" viewBox="0 0 18 14" fill="none">
+      <rect width="18" height="2" rx="1" fill="currentColor"/>
+      <rect y="6" width="18" height="2" rx="1" fill="currentColor"/>
+      <rect y="12" width="18" height="2" rx="1" fill="currentColor"/>
+    </svg>
+  </button>
 </header>
 
 <div class="container">
@@ -351,6 +432,7 @@
       <a class="nav-item" href="#digest"><div class="nav-dot"></div>daily-digest</a>
     </div>
   </nav>
+  <div class="nav-overlay" id="navOverlay" onclick="closeNav()"></div>
 
   <main>
     <div class="hero">
@@ -1060,6 +1142,19 @@ Variantes sem custo cadastrado:  <span class="c-orange">910</span>
   // Restore preference on load
   const savedLang = localStorage.getItem('lang') || 'pt';
   if (savedLang === 'es') switchLang('es');
+
+  // Mobile nav drawer
+  function toggleNav() {
+    document.querySelector('nav').classList.toggle('open');
+    document.getElementById('navOverlay').classList.toggle('visible');
+  }
+  function closeNav() {
+    document.querySelector('nav').classList.remove('open');
+    document.getElementById('navOverlay').classList.remove('visible');
+  }
+  document.querySelectorAll('.nav-item').forEach(item => {
+    item.addEventListener('click', () => { if (window.innerWidth <= 768) closeNav(); });
+  });
 </script>
 </body>
 </html>
