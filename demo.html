@@ -3,7 +3,28 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Nuvemshop Claude Skills — Demo</title>
+<title>13 Claude Skills para Nuvemshop — Automação via API</title>
+<meta name="description" content="13 Claude Code skills que conectam diretamente na API da Nuvemshop: GMV, estoque, RFM, cross-sell, SEO, margem e mais. Setup em 5 minutos, outputs reais.">
+<meta name="keywords" content="Nuvemshop, Tiendanube, Claude Code, e-commerce automation, skills, API, GMV, RFM, estoque, cross-sell">
+<meta property="og:title" content="13 Claude Skills para Nuvemshop">
+<meta property="og:description" content="Análises automáticas da sua loja via Claude Code. Conecta direto na API — sem planilha, sem exportação manual. Outputs reais, setup em 5 minutos.">
+<meta property="og:type" content="website">
+<meta property="og:url" content="https://skills-merchants-nuvemshop.vercel.app">
+<meta name="robots" content="index, follow">
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "SoftwareApplication",
+  "name": "Nuvemshop Claude Skills",
+  "description": "13 Claude Code skills para análise e automação de lojas Nuvemshop via API REST. Inclui análise de GMV, segmentação RFM, previsão de ruptura de estoque, cross-sell por co-compra, otimização de frete, SEO em massa e mais.",
+  "applicationCategory": "BusinessApplication",
+  "operatingSystem": "macOS, Windows, Linux",
+  "author": { "@type": "Person", "name": "Thiago Rocha", "url": "https://www.linkedin.com/in/thiago-gouveia-rocha/" },
+  "codeRepository": "https://github.com/thiagorocha-2/nuvemshop-claude-skills",
+  "url": "https://skills-merchants-nuvemshop.vercel.app",
+  "offers": { "@type": "Offer", "price": "0", "priceCurrency": "BRL" }
+}
+</script>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;600;700&display=swap">
@@ -200,6 +221,10 @@
   .step-code .sc-green { color: var(--green); }
   .step-note { font-size: 11.5px; color: #3d5280; margin-top: 8px; line-height: 1.4; }
   .step-note strong { color: var(--muted); }
+  .step-note a { color: var(--muted); }
+
+  .setup-prereqs { display: flex; gap: 16px; margin-top: 14px; flex-wrap: wrap; }
+  .prereq { font-size: 12px; color: var(--green); font-weight: 600; }
 
   /* SKILL CARD */
   .skill-card {
@@ -456,72 +481,75 @@
     <!-- SETUP -->
     <div class="setup-card" id="setup">
       <div class="setup-header">
-        <h2 data-pt="Como instalar e usar" data-es="Cómo instalar y usar">Como instalar e usar</h2>
-        <p data-pt="Configure uma vez, use para sempre. Em ~5 minutos sua loja está conectada ao Claude." data-es="Configurá una vez, usá para siempre. En ~5 minutos tu tienda está conectada a Claude.">Configure uma vez, use para sempre. Em ~5 minutos sua loja está conectada ao Claude.</p>
+        <h2 data-pt="Como começar — 5 minutos, uma vez só" data-es="Cómo empezar — 5 minutos, una sola vez">Como começar — 5 minutos, uma vez só</h2>
+        <p data-pt="Configure uma vez, funciona para sempre. Você vai precisar de um computador (Mac ou Windows) com acesso ao terminal." data-es="Configurá una vez, funciona para siempre. Necesitás una computadora (Mac o Windows) con acceso a la terminal.">Configure uma vez, funciona para sempre. Você vai precisar de um computador (Mac ou Windows) com acesso ao terminal.</p>
+        <div class="setup-prereqs">
+          <span class="prereq" data-pt="✓ Mac ou Windows" data-es="✓ Mac o Windows">✓ Mac ou Windows</span>
+          <span class="prereq" data-pt="✓ ~5 minutos" data-es="✓ ~5 minutos">✓ ~5 minutos</span>
+          <span class="prereq" data-pt="✓ Acesso ao admin da loja" data-es="✓ Acceso al admin de tu tienda">✓ Acesso ao admin da loja</span>
+        </div>
       </div>
       <div class="setup-steps">
 
         <div class="setup-step">
           <div class="step-num">1</div>
           <div class="step-content">
-            <div class="step-title" data-pt="Instale o Claude Code" data-es="Instalá el Claude Code">Instale o Claude Code</div>
-            <div class="step-desc" data-pt="O Claude Code é o CLI da Anthropic que roda no seu terminal e interpreta as skills. Requer Node.js 18+." data-es="Claude Code es el CLI de Anthropic que corre en tu terminal e interpreta las skills. Requiere Node.js 18+.">O Claude Code é o CLI da Anthropic que roda no seu terminal e interpreta as skills. Requer Node.js 18+.</div>
+            <div class="step-title" data-pt="Instale o Node.js e o Claude Code" data-es="Instalá Node.js y Claude Code">Instale o Node.js e o Claude Code</div>
+            <div class="step-desc" data-pt="O Claude Code precisa do &lt;strong&gt;Node.js&lt;/strong&gt; para funcionar. Se você nunca instalou, baixe a versão LTS em &lt;a href='https://nodejs.org' target='_blank' rel='noopener' style='color:var(--accent2)'&gt;nodejs.org&lt;/a&gt; — é um instalador comum, como qualquer programa. Depois, abra o terminal e rode:" data-es="Claude Code necesita &lt;strong&gt;Node.js&lt;/strong&gt; para funcionar. Si nunca lo instalaste, descargá la versión LTS en &lt;a href='https://nodejs.org' target='_blank' rel='noopener' style='color:var(--accent2)'&gt;nodejs.org&lt;/a&gt; — es un instalador normal. Después, abrí la terminal y corré:">O Claude Code precisa do <strong>Node.js</strong> para funcionar. Se você nunca instalou, baixe a versão LTS em <a href="https://nodejs.org" target="_blank" rel="noopener" style="color:var(--accent2)">nodejs.org</a> — é um instalador comum, como qualquer programa. Depois, abra o terminal e rode:</div>
             <div class="step-code">npm install -g @anthropic-ai/claude-code</div>
-            <div class="step-note" data-pt="Após instalar, rode &lt;strong&gt;claude&lt;/strong&gt; no terminal para confirmar que está funcionando." data-es="Tras instalar, corré &lt;strong&gt;claude&lt;/strong&gt; en la terminal para confirmar que funciona.">Após instalar, rode <strong>claude</strong> no terminal para confirmar que está funcionando.</div>
+            <div class="step-note" data-pt="&lt;strong&gt;Como abrir o terminal:&lt;/strong&gt; Mac → pressione Cmd+Espaço, digite 'Terminal' e Enter. Windows → pressione a tecla Windows, digite 'cmd' e Enter. Já tem Node.js? Pule direto para o comando acima." data-es="&lt;strong&gt;Cómo abrir la terminal:&lt;/strong&gt; Mac → Cmd+Espacio, escribí 'Terminal' y Enter. Windows → tecla Windows, escribí 'cmd' y Enter. ¿Ya tenés Node.js? Saltá directo al comando de arriba."><strong>Como abrir o terminal:</strong> Mac → pressione Cmd+Espaço, digite 'Terminal' e Enter. Windows → pressione a tecla Windows, digite 'cmd' e Enter. Já tem Node.js? Pule direto para o comando acima.</div>
           </div>
         </div>
 
         <div class="setup-step">
           <div class="step-num">2</div>
           <div class="step-content">
-            <div class="step-title" data-pt="Copie as skills para a pasta do Claude" data-es="Copiá las skills a la carpeta de Claude">Copie as skills para a pasta do Claude</div>
-            <div class="step-desc" data-pt="Cada skill é um arquivo &lt;strong&gt;SKILL.md&lt;/strong&gt; com instruções que o Claude lê automaticamente ao ser invocado. Baixe as skills e copie cada pasta para &lt;code style='font-family:monospace;font-size:11px;color:var(--accent2)'&gt;~/.claude/skills/&lt;/code&gt;." data-es="Cada skill es un archivo &lt;strong&gt;SKILL.md&lt;/strong&gt; con instrucciones que Claude lee automáticamente al ser invocado. Descargá las skills y copiá cada carpeta a &lt;code style='font-family:monospace;font-size:11px;color:var(--accent2)'&gt;~/.claude/skills/&lt;/code&gt;.">Cada skill é um arquivo <strong>SKILL.md</strong> com instruções que o Claude lê automaticamente ao ser invocado. Baixe as skills e copie cada pasta para <code style="font-family:monospace;font-size:11px;color:var(--accent2)">~/.claude/skills/</code>.</div>
-            <div class="step-code"><span class="sc-dim"># Clone o repositório</span>
+            <div class="step-title" data-pt="Baixe as 13 skills" data-es="Descargá las 13 skills">Baixe as 13 skills</div>
+            <div class="step-desc" data-pt="As skills ficam em uma pasta especial que o Claude lê automaticamente. Cole os dois comandos abaixo no terminal para baixar e instalar todas de uma vez:" data-es="Las skills van en una carpeta especial que Claude lee automáticamente. Pegá estos dos comandos en la terminal para bajar e instalar todas de una vez:">As skills ficam em uma pasta especial que o Claude lê automaticamente. Cole os dois comandos abaixo no terminal para baixar e instalar todas de uma vez:</div>
+            <div class="step-code"><span class="sc-dim"># 1. Baixa as skills do GitHub</span>
 git clone https://github.com/thiagorocha-2/nuvemshop-claude-skills
 
-<span class="sc-dim"># Copie todas as 13 skills de uma vez</span>
-mkdir -p ~/.claude/skills
-cp -r nuvemshop-claude-skills/*/  ~/.claude/skills/</div>
-            <div class="step-note" data-pt="Cada pasta é independente — copie só as skills que quiser usar." data-es="Cada carpeta es independiente — copiá solo las skills que quieras usar.">Cada pasta é independente — copie só as skills que quiser usar.</div>
+<span class="sc-dim"># 2. Copia para a pasta do Claude</span>
+mkdir -p ~/.claude/skills && cp -r nuvemshop-claude-skills/*/  ~/.claude/skills/</div>
+            <div class="step-note" data-pt="&lt;strong&gt;Não sabe usar git?&lt;/strong&gt; Acesse &lt;a href='https://github.com/thiagorocha-2/nuvemshop-claude-skills' target='_blank' rel='noopener'&gt;github.com/thiagorocha-2/nuvemshop-claude-skills&lt;/a&gt;, clique em 'Code → Download ZIP', descompacte e copie as pastas para ~/.claude/skills/" data-es="&lt;strong&gt;¿No sabés usar git?&lt;/strong&gt; Entrá a &lt;a href='https://github.com/thiagorocha-2/nuvemshop-claude-skills' target='_blank' rel='noopener'&gt;github.com/thiagorocha-2/nuvemshop-claude-skills&lt;/a&gt;, hacé clic en 'Code → Download ZIP', descomprimí y copiá las carpetas a ~/.claude/skills/"><strong>Não sabe usar git?</strong> Acesse <a href="https://github.com/thiagorocha-2/nuvemshop-claude-skills" target="_blank" rel="noopener">github.com/thiagorocha-2/nuvemshop-claude-skills</a>, clique em 'Code → Download ZIP', descompacte e copie as pastas para ~/.claude/skills/</div>
           </div>
         </div>
 
         <div class="setup-step">
           <div class="step-num">3</div>
           <div class="step-content">
-            <div class="step-title" data-pt="Obtenha as credenciais da Nuvemshop" data-es="Obtené las credenciales de Tiendanube">Obtenha as credenciais da Nuvemshop</div>
-            <div class="step-desc" data-pt="No painel admin da sua loja: &lt;strong&gt;Potencializar → Aplicativos sob medida&lt;/strong&gt;. Copie o &lt;strong&gt;Store ID&lt;/strong&gt; (número na URL) e o &lt;strong&gt;Access Token&lt;/strong&gt; gerado." data-es="En el panel admin de tu tienda: &lt;strong&gt;Potenciar → Aplicaciones a medida&lt;/strong&gt;. Copiá el &lt;strong&gt;Store ID&lt;/strong&gt; (número en la URL) y el &lt;strong&gt;Access Token&lt;/strong&gt; generado.">No painel admin da sua loja: <strong>Potencializar → Aplicativos sob medida</strong>. Copie o <strong>Store ID</strong> (número na URL) e o <strong>Access Token</strong> gerado.</div>
-            <div class="step-note" data-pt="O token não expira — você só precisa fazer isso uma vez por loja." data-es="El token no expira — solo necesitás hacerlo una vez por tienda.">O token não expira — você só precisa fazer isso uma vez por loja.</div>
+            <div class="step-title" data-pt="Gere o token da sua loja na Nuvemshop" data-es="Generá el token de tu tienda en Tiendanube">Gere o token da sua loja na Nuvemshop</div>
+            <div class="step-desc" data-pt="O token dá permissão para as skills lerem os dados da sua loja. &lt;strong&gt;No painel admin:&lt;/strong&gt; Potencializar → Aplicativos sob medida → Criar aplicativo. Anote o &lt;strong&gt;Store ID&lt;/strong&gt; (número que aparece no URL da loja) e o &lt;strong&gt;Access Token&lt;/strong&gt; gerado." data-es="El token autoriza a las skills a leer los datos de tu tienda. &lt;strong&gt;En el panel admin:&lt;/strong&gt; Potenciar → Aplicaciones a medida → Crear aplicación. Anotá el &lt;strong&gt;Store ID&lt;/strong&gt; (número en la URL) y el &lt;strong&gt;Access Token&lt;/strong&gt; generado.">O token dá permissão para as skills lerem os dados da sua loja. <strong>No painel admin:</strong> Potencializar → Aplicativos sob medida → Criar aplicativo. Anote o <strong>Store ID</strong> (número que aparece no URL da loja) e o <strong>Access Token</strong> gerado.</div>
+            <div class="step-note" data-pt="O token &lt;strong&gt;não expira&lt;/strong&gt; — você gera uma vez e usa para sempre. Guarde em local seguro." data-es="El token &lt;strong&gt;no expira&lt;/strong&gt; — lo generás una vez y lo usás para siempre. Guardalo en un lugar seguro.">O token <strong>não expira</strong> — você gera uma vez e usa para sempre. Guarde em local seguro.</div>
           </div>
         </div>
 
         <div class="setup-step">
           <div class="step-num">4</div>
           <div class="step-content">
-            <div class="step-title" data-pt="Configure as variáveis de ambiente" data-es="Configurá las variables de entorno">Configure as variáveis de ambiente</div>
-            <div class="step-desc" data-pt="As skills leem as credenciais via variáveis de ambiente. Adicione ao seu &lt;strong&gt;~/.zshrc&lt;/strong&gt; ou &lt;strong&gt;~/.bashrc&lt;/strong&gt; para não precisar redigitar." data-es="Las skills leen las credenciales vía variables de entorno. Agregalo a tu &lt;strong&gt;~/.zshrc&lt;/strong&gt; o &lt;strong&gt;~/.bashrc&lt;/strong&gt; para no tener que escribirlo de nuevo.">As skills leem as credenciais via variáveis de ambiente. Adicione ao seu <strong>~/.zshrc</strong> ou <strong>~/.bashrc</strong> para não precisar redigitar.</div>
-            <div class="step-code"><span class="sc-dim"># Adicione ao ~/.zshrc (permanente)</span>
-export NUVEMSHOP_STORE_ID=<span class="sc-green">seu_store_id</span>
-export NUVEMSHOP_TOKEN=<span class="sc-green">seu_access_token</span>
-
-<span class="sc-dim"># Recarregue o terminal</span>
+            <div class="step-title" data-pt="Salve as credenciais no terminal" data-es="Guardá las credenciales en la terminal">Salve as credenciais no terminal</div>
+            <div class="step-desc" data-pt="Cole o bloco abaixo no terminal &lt;strong&gt;substituindo os valores em verde&lt;/strong&gt; pelo seu Store ID e Token do passo anterior. Isso salva permanentemente — você não precisa repetir." data-es="Pegá el bloque de abajo en la terminal &lt;strong&gt;reemplazando los valores en verde&lt;/strong&gt; con tu Store ID y Token del paso anterior. Esto los guarda de forma permanente.">Cole o bloco abaixo no terminal <strong>substituindo os valores em verde</strong> pelo seu Store ID e Token do passo anterior. Isso salva permanentemente — você não precisa repetir.</div>
+            <div class="step-code"><span class="sc-dim"># Substitua pelos seus dados reais</span>
+echo 'export NUVEMSHOP_STORE_ID=<span class="sc-green">SEU_ID_AQUI</span>'   >> ~/.zshrc
+echo 'export NUVEMSHOP_TOKEN=<span class="sc-green">SEU_TOKEN_AQUI</span>' >> ~/.zshrc
 source ~/.zshrc</div>
+            <div class="step-note" data-pt="&lt;strong&gt;Windows?&lt;/strong&gt; Painel de Controle → Sistema → Configurações avançadas do sistema → Variáveis de Ambiente. Crie NUVEMSHOP_STORE_ID e NUVEMSHOP_TOKEN como variáveis de usuário." data-es="&lt;strong&gt;¿Windows?&lt;/strong&gt; Panel de Control → Sistema → Configuración avanzada → Variables de entorno. Creá NUVEMSHOP_STORE_ID y NUVEMSHOP_TOKEN como variables de usuario."><strong>Windows?</strong> Painel de Controle → Sistema → Configurações avançadas do sistema → Variáveis de Ambiente. Crie NUVEMSHOP_STORE_ID e NUVEMSHOP_TOKEN como variáveis de usuário.</div>
           </div>
         </div>
 
         <div class="setup-step">
           <div class="step-num">5</div>
           <div class="step-content">
-            <div class="step-title" data-pt="Abra o Claude Code e invoque qualquer skill" data-es="Abrí el Claude Code e invocá cualquier skill">Abra o Claude Code e invoque qualquer skill</div>
-            <div class="step-desc" data-pt="Na pasta do seu projeto (ou em qualquer lugar), abra o Claude Code e digite o nome da skill com &lt;strong&gt;/&lt;/strong&gt;. O Claude detecta automaticamente os arquivos SKILL.md e executa o fluxo." data-es="En la carpeta de tu proyecto (o en cualquier lugar), abrí Claude Code y escribí el nombre de la skill con &lt;strong&gt;/&lt;/strong&gt;. Claude detecta automáticamente los archivos SKILL.md y ejecuta el flujo.">Na pasta do seu projeto (ou em qualquer lugar), abra o Claude Code e digite o nome da skill com <strong>/</strong>. O Claude detecta automaticamente os arquivos SKILL.md e executa o fluxo.</div>
-            <div class="step-code"><span class="sc-dim"># No terminal</span>
+            <div class="step-title" data-pt="Pronto — abra o Claude e use qualquer skill" data-es="¡Listo — abrí Claude y usá cualquier skill!">Pronto — abra o Claude e use qualquer skill</div>
+            <div class="step-desc" data-pt="Abra o terminal, rode &lt;strong&gt;claude&lt;/strong&gt; e digite o nome de qualquer skill com &lt;strong&gt;/&lt;/strong&gt;. O Claude vai pedir permissão para rodar os scripts — aprove. Em ~10 segundos você tem o resultado da sua loja na tela." data-es="Abrí la terminal, corré &lt;strong&gt;claude&lt;/strong&gt; y escribí el nombre de cualquier skill con &lt;strong&gt;/&lt;/strong&gt;. Claude va a pedir permiso para ejecutar los scripts — aprobá. En ~10 segundos tenés el resultado en pantalla.">Abra o terminal, rode <strong>claude</strong> e digite o nome de qualquer skill com <strong>/</strong>. O Claude vai pedir permissão para rodar os scripts — aprove. Em ~10 segundos você tem o resultado da sua loja na tela.</div>
+            <div class="step-code"><span class="sc-dim"># Abre o Claude Code</span>
 claude
 
-<span class="sc-dim"># Dentro do Claude Code, invoque qualquer skill:</span>
+<span class="sc-dim"># Dentro do Claude, digite qualquer skill:</span>
 /daily-digest
 /catalog-health
 /rfm-segmentation</div>
-            <div class="step-note" data-pt="Cada skill guia você pelo fluxo — coleta dados, exibe preview e pede confirmação antes de qualquer escrita na API." data-es="Cada skill te guía por el flujo — recolecta datos, muestra preview y pide confirmación antes de cualquier escritura en la API.">Cada skill guia você pelo fluxo — coleta dados, exibe preview e pede confirmação antes de qualquer escrita na API.</div>
+            <div class="step-note" data-pt="Cada skill guia você pelo fluxo — coleta dados, mostra um preview e pede confirmação antes de qualquer alteração na loja." data-es="Cada skill te guía por el flujo — recolecta datos, muestra un preview y pide confirmación antes de cualquier cambio en la tienda.">Cada skill guia você pelo fluxo — coleta dados, mostra um preview e pede confirmação antes de qualquer alteração na loja.</div>
           </div>
         </div>
 

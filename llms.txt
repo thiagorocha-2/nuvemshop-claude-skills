@@ -1,0 +1,83 @@
+# Nuvemshop Claude Skills
+
+> 13 Claude Code skills that connect directly to the Nuvemshop / Tiendanube REST API to deliver e-commerce analytics and automation — no spreadsheets, no manual exports.
+
+- Author: Thiago Rocha (https://www.linkedin.com/in/thiago-gouveia-rocha/)
+- Source: https://github.com/thiagorocha-2/nuvemshop-claude-skills
+- Demo: https://skills-merchants-nuvemshop.vercel.app
+- License: MIT — personal project, not affiliated with Nuvemshop
+
+## What this is
+
+Each skill is a SKILL.md file placed in `~/.claude/skills/<name>/`. When a user types `/skill-name` inside Claude Code, Claude reads the SKILL.md and executes the defined flow: it calls the Nuvemshop REST API, processes the data with Python, and displays results in the terminal. Write operations (PUT/POST) always require user confirmation before executing.
+
+## API
+
+- Base URL: `https://api.tiendanube.com/2025-03/{store_id}`
+- Auth: `Authentication: bearer {token}` header
+- Rate limit: 2 req/s, burst 40
+- Credentials: `NUVEMSHOP_STORE_ID` and `NUVEMSHOP_TOKEN` environment variables
+
+## Skills
+
+### /daily-digest
+Invocation: `/daily-digest`
+Daily executive briefing: weekly GMV vs prior week (delta %), pending payments at risk, critical stock (≤5 units), recent cancellations with revenue lost. All data from one API call in ~10 seconds.
+
+### /catalog-health
+Invocation: `/catalog-health`
+Full published-catalog audit: products without images, without descriptions (<30 chars), without seo_title, without seo_description, and variants published with zero stock. Outputs prioritized action list.
+
+### /stockout-predictor
+Invocation: `/stockout-predictor [dias_alerta=14]`
+Calculates 30-day sales velocity per SKU, fetches current stock, and estimates days remaining. Alerts before stockout. Threshold configurable (default: 14 days).
+
+### /rfm-segmentation
+Invocation: `/rfm-segmentation`
+Classifies customer base into RFM segments: Champions, Loyal, New, At Risk, Dormant, Needs Attention. Exports CSV with name, email, phone, segment, total spent — ready for WhatsApp Business, RD Station, or HubSpot import.
+
+### /abandonment-analysis
+Invocation: `/abandonment-analysis [dias=30]`
+Analyzes order funnel: paid vs abandoned vs cancelled vs pending. Groups cancellations by reason (customer/fraud/inventory/other). Identifies which SKUs appear most in abandoned and cancelled orders.
+
+### /cross-sell-recommender
+Invocation: `/cross-sell-recommender [top_n=20] [dias=90]`
+Builds co-purchase matrix from real order data. For the top N products, surfaces the 3 strongest cross-sell pairings with co-purchase rate. Ready to configure in PDP or post-purchase WhatsApp automation.
+
+### /cohort-retention
+Invocation: `/cohort-retention`
+Retention cohort table by first-purchase month. Shows reorder rate per cohort — reveals whether retention is improving or worsening over time.
+
+### /payment-mix-analyzer
+Invocation: `/payment-mix-analyzer [dias=90]`
+Compares order count, GMV share, and average ticket by payment method: PIX, boleto, credit card 1x, 2–3x, 4–6x, 7x+. LATAM-exclusive insight — not available in Shopify tooling.
+
+### /shipping-optimizer
+Invocation: `/shipping-optimizer [dias=90]`
+Simulates free-shipping thresholds against real order subtotal distribution. For each candidate threshold, shows: % of orders eligible, estimated monthly shipping cost absorbed, and average ticket uplift.
+
+### /seo-meta-generator
+Invocation: `/seo-meta-generator`
+Generates seo_title (≤70 chars) and seo_description (≤320 chars) for the top 50 best-selling products using product name and existing description as context. Preview shown before writing back via PUT API.
+
+### /product-description-rewriter
+Invocation: `/product-description-rewriter [categoria_id=all] [idioma=pt]`
+Rewrites product descriptions for a category in brand voice, 80–120 words, in PT-BR or ES. Shows list of affected products and new descriptions before any PUT request.
+
+### /price-margin-analysis
+Invocation: `/price-margin-analysis`
+Finds products where discount ≥ 20% AND margin < 30%. Detects stacked discounts eroding profitability without driving volume. Requires `cost` field populated on variants.
+
+### /bulk-price-updater
+Invocation: `/bulk-price-updater [categoria_id=all] [ajuste_pct=0] [campo=preco|custo|ambos]`
+Applies a percentage markup to price and/or cost fields across all variants. Solves the Nuvemshop UX limitation where cost is buried inside each variant — impossible to update manually at scale. Shows preview table before applying.
+
+## Setup (5 minutes)
+
+1. Install Node.js LTS from https://nodejs.org
+2. Run: `npm install -g @anthropic-ai/claude-code`
+3. Clone: `git clone https://github.com/thiagorocha-2/nuvemshop-claude-skills`
+4. Copy: `mkdir -p ~/.claude/skills && cp -r nuvemshop-claude-skills/*/ ~/.claude/skills/`
+5. Generate API token: Nuvemshop admin → Potencializar → Aplicativos sob medida
+6. Set env vars: `echo 'export NUVEMSHOP_STORE_ID=YOUR_ID' >> ~/.zshrc && echo 'export NUVEMSHOP_TOKEN=YOUR_TOKEN' >> ~/.zshrc && source ~/.zshrc`
+7. Run `claude` and invoke any skill with `/skill-name`
